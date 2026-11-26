@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>FitApp Mini</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  :root {
+    --bg: #0D0D0F;
+    --card: #1C1C1E;
+    --card2: #242426;
+    --border: #333336;
+    --text: #FFFFFF;
+    --muted: #8E8E93;
+    --accent: #FFFFFF;
+    --green: #34C759;
+    --blue: #5E8BFF;
+    --yellow: #FFD60A;
+    --red: #FF453A;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  body { margin: 0; background: var(--bg); color: var(--text); padding-bottom: 90px; }
+  .hidden { display: none !important; }
+
+  /* Шапка */
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; position: sticky; top: 0; background: rgba(13,13,15,0.92); backdrop-filter: blur(10px); z-index: 20; }
+  .circle-btn { width: 38px; height: 38px; border-radius: 50%; background: var(--card); border: 1px solid var(--border); color: #fff; font-size: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .pill-group { display: flex; gap: 8px; background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 4px 10px; }
+  .pill-btn { background: none; border: none; color: #fff; font-size: 16px; cursor: pointer; padding: 4px 6px; }
+  .title { font-size: 18px; font-weight: 700; }
+
+  /* Карточки */
+  .container { padding: 0 16px; }
+  .card { background: var(--card); border-radius: 20px; padding: 16px; margin-bottom: 14px; border: 1px solid #262629; }
+  .card-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .muted { color: var(--muted); font-size: 13px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .tool-btn { background: var(--card); border: 1px solid #2C2C2E; border-radius: 18px; padding: 16px 12px; color: #fff; text-align: left; cursor: pointer; }
+  .tool-btn .ico { font-size: 22px; margin-bottom: 6px; display: block; }
+  .tool-btn .lbl { font-size: 14px; font-weight: 600; }
+
+  /* Список программ и клиентов */
+  .list-item { display: flex; justify-content: space-between; align-items: center; padding: 14px; background: var(--card2); border-radius: 16px; margin-bottom: 8px; cursor: pointer; border: 1px solid transparent; }
+  .list-item.superset { border-left: 4px solid var(--blue); }
+  .badge { font-size: 11px; padding: 4px 8px; border-radius: 10px; background: #2C2C2E; color: #fff; }
+  .badge.active { background: rgba(52,199,89,0.2); color: var(--green); }
+
+  /* Экран упражнения (как на скриншоте) */
+  .warmup-box { background: #161618; border-radius: 18px; padding: 14px; text-align: center; margin-bottom: 14px; border: 1px solid #262629; }
+  .set-header { display: grid; grid-template-columns: 52px 1fr 1fr 44px; gap: 8px; text-align: center; color: var(--muted); font-size: 12px; margin-bottom: 8px; }
+  .set-row { display: grid; grid-template-columns: 52px 1fr 1fr 44px; gap: 8px; align-items: center; margin-bottom: 10px; }
+  .set-num { height: 42px; border-radius: 21px; border: 1px solid var(--border); background: transparent; color: #fff; font-weight: 600; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; }
+  .set-num.drop { border-color: var(--yellow); color: var(--yellow); }
+  .set-input { height: 42px; border-radius: 21px; border: 1px solid var(--border); background: #141416; color: #fff; text-align: center; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .set-input.active { border-color: #fff; background: #1F1F22; }
+  .check-btn { width: 42px; height: 42px; border-radius: 50%; border: 1.5px solid var(--border); background: transparent; color: transparent; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .check-btn.done { background: var(--green); border-color: var(--green); color: #000; font-weight: 700; }
+
+  .action-bar { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid #2C2C2E; padding-top: 12px; margin-top: 8px; }
+  .action-bar button { background: none; border: none; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; padding: 6px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+  .action-bar button:first-child { border-right: 1px solid #2C2C2E; }
+
+  /* Панель Запас (RIR) + Кастомная клавиатура */
+  .keypad-sheet { position: fixed; left: 0; right: 0; bottom: 0; background: #121214; border-top: 1px solid #2C2C2E; padding: 10px 12px 18px; z-index: 50; }
+  .rir-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; gap: 6px; }
+  .rir-dot { width: 32px; height: 32px; border-radius: 50%; border: none; font-size: 12px; font-weight: 700; color: #000; cursor: pointer; opacity: 0.75; }
+  .rir-dot.selected { opacity: 1; transform: scale(1.15); box-shadow: 0 0 0 2px #fff; }
+  .numpad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .key { height: 48px; border-radius: 24px; background: #222225; border: none; color: #fff; font-size: 20px; font-weight: 500; cursor: pointer; }
+  .key.ok { background: #fff; color: #000; font-weight: 700; }
+
+  /* Таймер-баннер */
+  .timer-pill { position: fixed; top: 64px; right: 16px; background: var(--green); color: #000; font-weight: 700; padding: 8px 14px; border-radius: 20px; z-index: 40; box-shadow: 0 4px 14px rgba(0,0,0,0.5); cursor: pointer; }
+
+  /* Нижняя навигация */
+  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(20,20,22,0.96); border-top: 1px solid #2C2C2E; display: flex; justify-content: space-around; padding: 10px 0 16px; z-index: 30; }
+  .nav-item { background: none; border: none; color: var(--muted); font-size: 11px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
+  .nav-item.active { color: #fff; }
+  .nav-item span { font-size: 20px; }
+
+  input.std-input, select.std-input { width: 100%; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--border); background: #141416; color: #fff; font-size: 15px; margin-bottom: 10px; }
+  .primary-btn { width: 100%; padding: 14px; border-radius: 16px; border: none; background: #fff; color: #000; font-size: 15px; font-weight: 700; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<div id="timerBanner" class="timer-pill hidden" onclick="stopTimer()">⏱ 01:30</div>
+
+<!-- ЭКРАН 1: ГЛАВНОЕ МЕНЮ -->
+<div id="viewHome">
+  <div class="topbar">
+    <div>
+      <div class="title" id="userName">Загрузка...</div>
+      <div class="muted" id="userRole">Подключение к таблице</div>
+    </div>
+    <button class="circle-btn" onclick="loadInit()">↻</button>
+  </div>
+
+  <div class="container">
+    <div class="card">
+      <div class="card-title">Мои программы</div>
+      <div id="programsList"><div class="muted">Загрузка программ...</div></div>
+    </div>
+
+    <div class="grid-2">
+      <button class="tool-btn" onclick="openView('viewKbju')"><span class="ico">🥗</span><span class="lbl">Рассчитать КБЖУ</span></button>
+      <button class="tool-btn" onclick="openView('view1RM')"><span class="ico">🏋️</span><span class="lbl">Расчет 1ПМ</span></button>
+      <button class="tool-btn" onclick="openRecords()"><span class="ico">🏆</span><span class="lbl">Мои рекорды</span></button>
+      <button class="tool-btn" onclick="openView('viewTech')"><span class="ico">📖</span><span class="lbl">База техники</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- ЭКРАН 2: ТРЕНИРОВКА (НЕДЕЛИ / ДНИ / УПРАЖНЕНИЯ) -->
+<div id="viewProgram" class="hidden">
+  <div class="topbar">
+    <button class="circle-btn" onclick="openView('viewHome')">‹</button>
+    <div class="title" id="progTitle">Программа</div>
+    <div class="pill-group">
+      <button class="pill-btn" onclick="toggleSupersetMode()" title="Связать суперсет">🔗</button>
+    </div>
+  </div>
+  <div class="container">
+    <select id="weekSelect" class="std-input" onchange="renderDays()"></select>
+    <select id="daySelect" class="std-input" onchange="renderExercises()"></select>
+    <div id="supersetHint" class="muted hidden" style="margin-bottom:10px;color:var(--blue)">🔗 Нажмите на 2 упражнения, чтобы объединить их в суперсет</div>
+    <div id="exercisesList"></div>
+  </div>
+</div>
+
+<!-- ЭКРАН 3: ЗАПИСЬ ПОДХОДОВ (КАК НА СКРИНШОТЕ) -->
+<div id="viewWorkout" class="hidden">
+  <div class="topbar">
+    <button class="circle-btn" onclick="closeWorkout()">‹</button>
+    <div class="title" id="exTitle">Упражнение</div>
+    <div class="pill-group">
+      <button class="pill-btn" onclick="addSetRow()">+</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="warmup-box">
+      <div style="font-weight:700;margin-bottom:4px" id="exTarget">Цель: 3-4 × 10-12</div>
+      <div class="muted" id="exPlan">План вес: —</div>
+    </div>
+
+    <div class="card">
+      <div class="set-header">
+        <div>Сет</div><div>Вес (кг)</div><div>Повторения</div><div></div>
+      </div>
+      <div id="setsContainer"></div>
+
+      <div class="action-bar">
+        <button onclick="addSetRow()">⊕ Сет</button>
+        <button onclick="cycleTimerPreset()" id="timerPresetBtn">⏱ 1 мин 30 сек</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Кастомная клавиатура + Запас (RIR) -->
+  <div id="keypadSheet" class="keypad-sheet hidden">
+    <div class="rir-bar">
+      <span class="muted">ⓘ Запас:</span>
+      <button class="rir-dot" style="background:#8E9AAF" onclick="setRir('5+', this)">5+</button>
+      <button class="rir-dot" style="background:#A3B1C6" onclick="setRir('4', this)">4</button>
+      <button class="rir-dot" style="background:#5AC878" onclick="setRir('3', this)">3</button>
+      <button class="rir-dot" style="background:#5AC878" onclick="setRir('2', this)">2</button>
+      <button class="rir-dot" style="background:#5AC878" onclick="setRir('1', this)">1</button>
+      <button class="rir-dot" style="background:#FFD60A" onclick="setRir('0', this)">0</button>
+      <button class="rir-dot" style="background:#FF6961" onclick="setRir('-1', this)">-1</button>
+    </div>
+    <div class="numpad">
+      <button class="key" onclick="padPress('1')">1</button>
+      <button class="key" onclick="padPress('2')">2</button>
+      <button class="key" onclick="padPress('3')">3</button>
+      <button class="key" onclick="padPress('/')">/</button>
+      <button class="key" onclick="padPress('4')">4</button>
+      <button class="key" onclick="padPress('5')">5</button>
+      <button class="key" onclick="padPress('6')">6</button>
+      <button class="key" onclick="padPress('.')">.</button>
+      <button class="key" onclick="padPress('7')">7</button>
+      <button class="key" onclick="padPress('8')">8</button>
+      <button class="key" onclick="padPress('9')">9</button>
+      <button class="key ok" onclick="hideKeypad()">✓</button>
+      <button class="key" onclick="hideKeypad()">⌄</button>
+      <button class="key" onclick="padPress('0')">0</button>
+      <button class="key" onclick="padBack()">⌫</button>
+      <button class="key" onclick="nextField()">→</button>
+    </div>
+  </div>
+</div>
+
+<!-- ЭКРАН 4: КЛИЕНТЫ (ТОЛЬКО ДЛЯ ТРЕНЕРА) -->
+<div id="viewClients" class="hidden">
+  <div class="topbar"><div class="title">👥 Мои клиенты</div></div>
+  <div class="container" id="clientsList"></div>
+</div>
+
+<!-- ЭКРАН 5: КБЖУ -->
+<div id="viewKbju" class="hidden">
+  <div class="topbar"><button class="circle-btn" onclick="openView('viewHome')">‹</button><div class="title">🥗 Калькулятор КБЖУ</div><div></div></div>
+  <div class="container">
+    <div class="card">
+      <input id="kWeight" class="std-input" type="number" placeholder="Вес (кг)">
+      <input id="kHeight" class="std-input" type="number" placeholder="Рост (см)">
+      <input id="kAge" class="std-input" type="number" placeholder="Возраст (лет)">
+      <select id="kGender" class="std-input"><option value="М">Мужской</option><option value="Ж">Женский</option></select>
+      <select id="kAmr" class="std-input">
+        <option value="1.2">1.2 — Сидячий</option>
+        <option value="1.375">1.375 — 1–3 трен/нед</option>
+        <option value="1.55" selected>1.55 — 3–5 трен/нед</option>
+        <option value="1.725">1.725 — 6–7 трен/нед</option>
+      </select>
+      <button class="primary-btn" onclick="calcKbju()">Рассчитать</button>
+      <div id="kbjuResult" style="margin-top:14px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ЭКРАН 6: 1ПМ -->
+<div id="view1RM" class="hidden">
+  <div class="topbar"><button class="circle-btn" onclick="openView('viewHome')">‹</button><div class="title">🏋️ Калькулятор 1ПМ</div><div></div></div>
+  <div class="container">
+    <div class="card">
+      <input id="rmW" class="std-input" type="number" placeholder="Рабочий вес (кг)">
+      <input id="rmR" class="std-input" type="number" placeholder="Повторения">
+      <button class="primary-btn" onclick="calc1RM()">Рассчитать 1ПМ</button>
+      <div id="rmResult" style="margin-top:14px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ЭКРАН 7: РЕКОРДЫ -->
+<div id="viewRecords" class="hidden">
+  <div class="topbar"><button class="circle-btn" onclick="openView('viewHome')">‹</button><div class="title">🏆 Мои рекорды (1ПМ)</div><div></div></div>
+  <div class="container" id="recordsList"></div>
+</div>
+
+<!-- ЭКРАН 8: ТЕХНИКА -->
+<div id="viewTech" class="hidden">
+  <div class="topbar"><button class="circle-btn" onclick="openView('viewHome')">‹</button><div class="title">📖 База техники</div><div></div></div>
+  <div class="container" id="techList"></div>
+</div>
+
+<!-- НИЖНЕЕ МЕНЮ -->
+<div class="bottom-nav" id="bottomNav">
+  <button class="nav-item active" onclick="openView('viewHome')"><span>🏠</span>Главная</button>
+  <button class="nav-item hidden" id="navClients" onclick="openView('viewClients')"><span>👥</span>Клиенты</button>
+  <button class="nav-item" onclick="openView('viewTech')"><span>📖</span>Техника</button>
+</div>
+
+<script>
+const API_URL = "ВСТАВЬТЕ_СЮДА_ССЫЛКУ_APPS_SCRIPT";
+const tg = window.Telegram?.WebApp;
+if (tg) { tg.ready(); tg.expand(); }
+const CHAT_ID = tg?.initDataUnsafe?.user?.id || "404570922"; // fallback для теста в браузере
+
+let appData = null, currentProg = null, currentWeeks = [], currentRecords = [], currentEx = null;
+let activeInput = null, activeRir = "", supersetMode = false, supersetPick = [];
+let timerPresets = [60, 90, 120, 180], timerPresetIdx = 1, timerInterval = null, timerLeft = 0;
+
+async function apiCall(params) {
+  const qs = new URLSearchParams({ chatId: CHAT_ID, ...params }).toString();
+  const r = await fetch(`${API_URL}?${qs}`);
+  return await r.json();
+}
+
+async function loadInit() {
+  const res = await apiCall({ action: "init" });
+  if (!res.ok) { document.getElementById("userName").innerText = "Нет доступа"; document.getElementById("userRole").innerText = res.error; return; }
+  appData = res;
+  document.getElementById("userName").innerText = res.user.name;
+  document.getElementById("userRole").innerText = res.isTrainer ? "👑 Тренер • ID: " + CHAT_ID : "💪 Клиент • ID: " + CHAT_ID;
+  if (res.isTrainer) document.getElementById("navClients").classList.remove("hidden");
+
+  // Программы
+  const pEl = document.getElementById("programsList");
+  pEl.innerHTML = res.programs.map((p, i) => `
+    <div class="list-item" onclick="openProgram(${i})">
+      <div><b>${p.title}</b><div class="muted">${p.sheetName}</div></div>
+      <span class="badge ${p.status==='Активна'?'active':''}">${p.status}</span>
+    </div>`).join("") || "<div class='muted'>Программ пока нет</div>";
+
+  // Клиенты тренера
+  if (res.isTrainer) {
+    document.getElementById("clientsList").innerHTML = res.clients.map((c, ci) => `
+      <div class="card">
+        <div class="card-title">👤 ${c.name}</div>
+        ${c.programs.map((p, pi) => `<div class="list-item" onclick="openClientProgram(${ci}, ${pi})"><span>${p.title}</span><span class="badge active">Открыть</span></div>`).join("")}
+      </div>`).join("");
+  }
+
+  // Техника
+  document.getElementById("techList").innerHTML = res.technique.map(t => `
+    <div class="card"><div class="card-title">${t.name}</div><div class="muted">${t.desc}</div></div>`).join("");
+}
+
+function openView(id) {
+  ["viewHome","viewProgram","viewWorkout","viewClients","viewKbju","view1RM","viewRecords","viewTech"].forEach(v => document.getElementById(v).classList.add("hidden"));
+  document.getElementById(id).classList.remove("hidden");
+  document.getElementById("bottomNav").classList.toggle("hidden", id === "viewWorkout");
+}
+
+async function openProgram(idx) {
+  currentProg = appData.programs[idx];
+  await loadProgramData(currentProg);
+}
+async function openClientProgram(ci, pi) {
+  currentProg = appData.clients[ci].programs[pi];
+  await loadProgramData(currentProg);
+}
+
+async function loadProgramData(prog) {
+  document.getElementById("progTitle").innerText = prog.title;
+  openView("viewProgram");
+  document.getElementById("exercisesList").innerHTML = "<div class='muted'>Загрузка тренировок...</div>";
+  const res = await apiCall({ action: "getProgram", spreadsheetId: prog.spreadsheetId, sheetName: prog.sheetName, sheet1rmName: prog.sheet1rmName });
+  currentWeeks = res.weeks || [];
+  currentRecords = res.records || [];
+  document.getElementById("weekSelect").innerHTML = currentWeeks.map((w, i) => `<option value="${i}">${w.title}</option>`).join("");
+  renderDays();
+}
+
+function renderDays() {
+  const wIdx = document.getElementById("weekSelect").value || 0;
+  const days = currentWeeks[wIdx]?.days || [];
+  document.getElementById("daySelect").innerHTML = days.map((d, i) => `<option value="${i}">${d.title}</option>`).join("");
+  renderExercises();
+}
+
+function renderExercises() {
+  const wIdx = document.getElementById("weekSelect").value || 0;
+  const dIdx = document.getElementById("daySelect").value || 0;
+  const exs = currentWeeks[wIdx]?.days[dIdx]?.exercises || [];
+  document.getElementById("exercisesList").innerHTML = exs.map((ex, i) => `
+    <div class="list-item ${ex.superset ? 'superset' : ''}" onclick="handleExClick(${wIdx},${dIdx},${i})">
+      <div><b>${ex.name}</b><div class="muted">${ex.targetSets} подх. × ${ex.targetReps} ${ex.planWeight ? '• План: '+ex.planWeight+' кг' : ''}</div></div>
+      <span class="badge">${ex.sets.filter(s=>s.w).length}/4</span>
+    </div>`).join("");
+}
+
+function toggleSupersetMode() {
+  supersetMode = !supersetMode;
+  supersetPick = [];
+  document.getElementById("supersetHint").classList.toggle("hidden", !supersetMode);
+}
+
+function handleExClick(wIdx, dIdx, eIdx) {
+  const ex = currentWeeks[wIdx].days[dIdx].exercises[eIdx];
+  if (supersetMode) {
+    ex.superset = !ex.superset;
+    supersetPick.push(eIdx);
+    if (supersetPick.length >= 2) { supersetMode = false; document.getElementById("supersetHint").classList.add("hidden"); }
+    renderExercises();
+    return;
+  }
+  currentEx = ex;
+  activeRir = ex.rir || "";
+  document.getElementById("exTitle").innerText = ex.name;
+  document.getElementById("exTarget").innerText = `Цель: ${ex.targetSets} подх. × ${ex.targetReps} повт.`;
+  document.getElementById("exPlan").innerText = ex.planWeight ? `План вес: ${ex.planWeight} кг (Коэфф: ${ex.coeff})` : `Коэфф: ${ex.coeff}`;
+  renderSets();
+  openView("viewWorkout");
+}
+
+function renderSets() {
+  const cont = document.getElementById("setsContainer");
+  cont.innerHTML = currentEx.sets.map((s, i) => `
+    <div class="set-row">
+      <div class="set-num ${s.drop?'drop':''}" onclick="toggleDrop(${i})">${s.drop ? 'D' : (i+1)}</div>
+      <div class="set-input" id="in_w_${i}" onclick="focusField(${i},'w')">${s.w ? s.w + ' кг' : '—'}</div>
+      <div class="set-input" id="in_r_${i}" onclick="focusField(${i},'r')">${s.r || '—'}</div>
+      <button class="check-btn ${s.done || (s.w && s.r) ? 'done' : ''}" onclick="saveSetRow(${i})">✓</button>
+    </div>`).join("");
+}
+
+function toggleDrop(i) {
+  currentEx.sets[i].drop = !currentEx.sets[i].drop;
+  renderSets();
+}
+
+function addSetRow() {
+  if (currentEx.sets.length < 4) { currentEx.sets.push({ w: "", r: "" }); renderSets(); }
+}
+
+function focusField(i, field) {
+  activeInput = { i, field };
+  document.querySelectorAll(".set-input").forEach(el => el.classList.remove("active"));
+  document.getElementById(`in_${field}_${i}`).classList.add("active");
+  document.getElementById("keypadSheet").classList.remove("hidden");
+}
+
+function hideKeypad() {
+  document.getElementById("keypadSheet").classList.add("hidden");
+  document.querySelectorAll(".set-input").forEach(el => el.classList.remove("active"));
+}
+
+function padPress(ch) {
+  if (!activeInput) return;
+  const s = currentEx.sets[activeInput.i];
+  s[activeInput.field] = String(s[activeInput.field] || "") + ch;
+  renderSets();
+  document.getElementById(`in_${activeInput.field}_${activeInput.i}`).classList.add("active");
+}
+
+function padBack() {
+  if (!activeInput) return;
+  const s = currentEx.sets[activeInput.i];
+  s[activeInput.field] = String(s[activeInput.field] || "").slice(0, -1);
+  renderSets();
+  document.getElementById(`in_${activeInput.field}_${activeInput.i}`).classList.add("active");
+}
+
+function nextField() {
+  if (!activeInput) return;
+  if (activeInput.field === "w") focusField(activeInput.i, "r");
+  else if (activeInput.i + 1 < currentEx.sets.length) focusField(activeInput.i + 1, "w");
+  else hideKeypad();
+}
+
+function setRir(val, btn) {
+  activeRir = val;
+  document.querySelectorAll(".rir-dot").forEach(b => b.classList.remove("selected"));
+  btn.classList.add("selected");
+}
+
+async function saveSetRow(i) {
+  const s = currentEx.sets[i];
+  if (!s.w || !s.r) return;
+  s.done = true;
+  renderSets();
+  hideKeypad();
+  startTimer(timerPresets[timerPresetIdx]);
+  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred("medium");
+  await apiCall({
+    action: "saveSet",
+    spreadsheetId: currentProg.spreadsheetId,
+    sheetName: currentProg.sheetName,
+    row: currentEx.row,
+    setIdx: i + 1,
+    weight: s.w,
+    reps: s.r,
+    rir: activeRir
+  });
+}
+
+function closeWorkout() { hideKeypad(); openView("viewProgram"); renderExercises(); }
+
+/* Таймер отдыха */
+function cycleTimerPreset() {
+  timerPresetIdx = (timerPresetIdx + 1) % timerPresets.length;
+  const sec = timerPresets[timerPresetIdx];
+  const m = Math.floor(sec/60), s = sec % 60;
+  document.getElementById("timerPresetBtn").innerText = `⏱ ${m} мин ${s ? s+' сек' : ''}`;
+  startTimer(sec);
+}
+function startTimer(sec) {
+  clearInterval(timerInterval);
+  timerLeft = sec;
+  const el = document.getElementById("timerBanner");
+  el.classList.remove("hidden");
+  updateTimerText();
+  timerInterval = setInterval(() => {
+    timerLeft--;
+    if (timerLeft <= 0) {
+      stopTimer();
+      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred("success");
+    } else updateTimerText();
+  }, 1000);
+}
+function updateTimerText() {
+  const m = String(Math.floor(timerLeft/60)).padStart(2,'0');
+  const s = String(timerLeft%60).padStart(2,'0');
+  document.getElementById("timerBanner").innerText = `⏱ ${m}:${s}`;
+}
+function stopTimer() { clearInterval(timerInterval); document.getElementById("timerBanner").classList.add("hidden"); }
+
+/* КБЖУ, 1ПМ, Рекорды */
+function calcKbju() {
+  const w = +document.getElementById("kWeight").value, h = +document.getElementById("kHeight").value, a = +document.getElementById("kAge").value;
+  const g = document.getElementById("kGender").value, amr = +document.getElementById("kAmr").value;
+  if (!w || !h || !a) return;
+  const bmr = g === "М" ? 10*w + 6.25*h - 5*a + 5 : 10*w + 6.25*h - 5*a - 161;
+  const kcal = Math.round(bmr * amr);
+  const p = Math.round(w * 1.8), f = Math.round(w * 0.9), c = Math.max(0, Math.round((kcal - p*4 - f*9)/4));
+  document.getElementById("kbjuResult").innerHTML = `🔥 <b>${kcal} ккал</b><br>🥩 Белки: ${p} г • 🥑 Жиры: ${f} г • 🍚 Углеводы: ${c} г`;
+}
+function calc1RM() {
+  const w = +document.getElementById("rmW").value, r = +document.getElementById("rmR").value;
+  if (!w || !r) return;
+  const epley = Math.round(((w * r) / 30 + w) / 2.5) * 2.5;
+  document.getElementById("rmResult").innerHTML = `⭐️ Рекомендуемый 1ПМ: <b>${epley} кг</b>`;
+}
+async function openRecords() {
+  if (!currentProg && appData?.programs?.length) { currentProg = appData.programs[0]; await loadProgramData(currentProg); }
+  openView("viewRecords");
+  document.getElementById("recordsList").innerHTML = currentRecords.map((r, i) => `
+    <div class="list-item">
+      <span>${r.name}</span>
+      <input style="width:76px;text-align:center;border-radius:10px;border:1px solid #333;background:#141416;color:#fff;padding:6px" value="${r.weight}" onchange="save1RM(${r.row}, this.value)">
+    </div>`).join("");
+}
+async function save1RM(row, weight) {
+  await apiCall({ action: "save1RM", spreadsheetId: currentProg.spreadsheetId, sheet1rmName: currentProg.sheet1rmName, row, weight });
+  if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred("success");
+}
+
+loadInit();
+</script>
+</body>
+</html>
