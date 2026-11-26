@@ -7,80 +7,128 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
   :root {
-    --bg: #0D0D0F;
-    --card: #1C1C1E;
-    --card2: #242426;
-    --border: #333336;
+    --bg: #0B0B0D;
+    --card: #161619;
+    --card2: #202024;
+    --border: #2D2D32;
     --text: #FFFFFF;
     --muted: #8E8E93;
-    --accent: #FFFFFF;
     --green: #34C759;
+    --green-bg: rgba(52,199,89,0.16);
     --blue: #5E8BFF;
     --yellow: #FFD60A;
     --red: #FF453A;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-  body { margin: 0; background: var(--bg); color: var(--text); padding-bottom: 90px; }
+  body { margin: 0; background: var(--bg); color: var(--text); padding-bottom: 92px; }
   .hidden { display: none !important; }
 
   /* Шапка */
-  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; position: sticky; top: 0; background: rgba(13,13,15,0.92); backdrop-filter: blur(10px); z-index: 20; }
-  .circle-btn { width: 38px; height: 38px; border-radius: 50%; background: var(--card); border: 1px solid var(--border); color: #fff; font-size: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-  .pill-group { display: flex; gap: 8px; background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 4px 10px; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; position: sticky; top: 0; background: rgba(11,11,13,0.92); backdrop-filter: blur(12px); z-index: 20; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .circle-btn { width: 38px; height: 38px; border-radius: 50%; background: var(--card); border: 1px solid var(--border); color: #fff; font-size: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+  .pill-group { display: flex; gap: 6px; background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 4px 10px; }
   .pill-btn { background: none; border: none; color: #fff; font-size: 16px; cursor: pointer; padding: 4px 6px; }
-  .title { font-size: 18px; font-weight: 700; }
+  .title { font-size: 17px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 8px; }
 
-  /* Карточки */
-  .container { padding: 0 16px; }
-  .card { background: var(--card); border-radius: 20px; padding: 16px; margin-bottom: 14px; border: 1px solid #262629; }
-  .card-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
-  .muted { color: var(--muted); font-size: 13px; }
+  /* Контейнеры и карточки */
+  .container { padding: 14px 16px 0; }
+  .card { background: var(--card); border-radius: 20px; padding: 16px; margin-bottom: 14px; border: 1px solid var(--border); }
+  .card-title { font-size: 15px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .muted { color: var(--muted); font-size: 13px; line-height: 1.35; }
+  .section-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); margin: 12px 0 8px 4px; }
+
+  /* Плитка инструментов */
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-  .tool-btn { background: var(--card); border: 1px solid #2C2C2E; border-radius: 18px; padding: 16px 12px; color: #fff; text-align: left; cursor: pointer; }
+  .tool-btn { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 15px 13px; color: #fff; text-align: left; cursor: pointer; transition: transform 0.1s, border-color 0.15s; }
+  .tool-btn:active { transform: scale(0.97); border-color: #555; }
   .tool-btn .ico { font-size: 22px; margin-bottom: 6px; display: block; }
-  .tool-btn .lbl { font-size: 14px; font-weight: 600; }
+  .tool-btn .lbl { font-size: 14px; font-weight: 600; display: block; }
+  .tool-btn .sub { font-size: 11px; color: var(--muted); margin-top: 2px; display: block; }
 
-  /* Список программ и клиентов */
-  .list-item { display: flex; justify-content: space-between; align-items: center; padding: 14px; background: var(--card2); border-radius: 16px; margin-bottom: 8px; cursor: pointer; border: 1px solid transparent; }
+  /* Выбор недель (чипы) и дней (карточки) */
+  .chips-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: none; }
+  .chips-scroll::-webkit-scrollbar { display: none; }
+  .week-chip { flex-shrink: 0; padding: 10px 15px; border-radius: 16px; background: var(--card); border: 1px solid var(--border); color: var(--muted); font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.15s; }
+  .week-chip.active { background: #fff; color: #000; border-color: #fff; }
+  .week-chip.done:not(.active) { border-color: rgba(52,199,89,0.45); color: #fff; }
+  .check-pill { width: 18px; height: 18px; border-radius: 50%; background: var(--green); color: #000; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+  .day-cards { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; }
+  .day-cards::-webkit-scrollbar { display: none; }
+  .day-card { flex-shrink: 0; min-width: 155px; max-width: 215px; padding: 12px 14px; border-radius: 18px; background: var(--card); border: 1px solid var(--border); cursor: pointer; transition: all 0.15s; }
+  .day-card.active { background: var(--card2); border-color: #fff; box-shadow: 0 0 0 1px #fff; }
+  .day-card.done { border-color: rgba(52,199,89,0.5); }
+  .day-card-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; font-weight: 700; font-size: 14px; }
+  .day-card-sub { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* Списки программ и упражнений */
+  .list-item { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 14px; background: var(--card); border-radius: 18px; margin-bottom: 9px; cursor: pointer; border: 1px solid var(--border); transition: transform 0.1s; }
+  .list-item:active { transform: scale(0.985); }
+  .list-item.done { border-color: rgba(52,199,89,0.4); background: linear-gradient(90deg, rgba(52,199,89,0.08), var(--card) 55%); }
   .list-item.superset { border-left: 4px solid var(--blue); }
-  .badge { font-size: 11px; padding: 4px 8px; border-radius: 10px; background: #2C2C2E; color: #fff; }
-  .badge.active { background: rgba(52,199,89,0.2); color: var(--green); }
+  .ex-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .status-dot { width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 13px; color: transparent; }
+  .status-dot.done { background: var(--green); border-color: var(--green); color: #000; font-weight: 800; }
+  .badge { font-size: 11px; padding: 4px 9px; border-radius: 10px; background: var(--card2); color: #fff; font-weight: 600; flex-shrink: 0; }
+  .badge.active { background: var(--green-bg); color: var(--green); }
 
-  /* Экран упражнения (как на скриншоте) */
-  .warmup-box { background: #161618; border-radius: 18px; padding: 14px; text-align: center; margin-bottom: 14px; border: 1px solid #262629; }
-  .set-header { display: grid; grid-template-columns: 52px 1fr 1fr 44px; gap: 8px; text-align: center; color: var(--muted); font-size: 12px; margin-bottom: 8px; }
-  .set-row { display: grid; grid-template-columns: 52px 1fr 1fr 44px; gap: 8px; align-items: center; margin-bottom: 10px; }
+  /* Экран упражнения */
+  .warmup-box { background: var(--card); border-radius: 18px; padding: 14px; text-align: center; margin-bottom: 14px; border: 1px solid var(--border); }
+  .set-header { display: grid; grid-template-columns: 50px 1fr 1fr 44px; gap: 8px; text-align: center; color: var(--muted); font-size: 12px; margin-bottom: 8px; }
+  .set-row { display: grid; grid-template-columns: 50px 1fr 1fr 44px; gap: 8px; align-items: center; margin-bottom: 10px; }
   .set-num { height: 42px; border-radius: 21px; border: 1px solid var(--border); background: transparent; color: #fff; font-weight: 600; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; }
   .set-num.drop { border-color: var(--yellow); color: var(--yellow); }
-  .set-input { height: 42px; border-radius: 21px; border: 1px solid var(--border); background: #141416; color: #fff; text-align: center; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-  .set-input.active { border-color: #fff; background: #1F1F22; }
+  .set-input { height: 42px; border-radius: 21px; border: 1px solid var(--border); background: #111114; color: #fff; text-align: center; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .set-input.active { border-color: #fff; background: #1F1F24; }
   .check-btn { width: 42px; height: 42px; border-radius: 50%; border: 1.5px solid var(--border); background: transparent; color: transparent; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
   .check-btn.done { background: var(--green); border-color: var(--green); color: #000; font-weight: 700; }
 
-  .action-bar { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid #2C2C2E; padding-top: 12px; margin-top: 8px; }
+  .action-bar { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--border); padding-top: 12px; margin-top: 8px; }
   .action-bar button { background: none; border: none; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; padding: 6px; display: flex; align-items: center; justify-content: center; gap: 6px; }
-  .action-bar button:first-child { border-right: 1px solid #2C2C2E; }
+  .action-bar button:first-child { border-right: 1px solid var(--border); }
 
-  /* Панель Запас (RIR) + Кастомная клавиатура */
-  .keypad-sheet { position: fixed; left: 0; right: 0; bottom: 0; background: #121214; border-top: 1px solid #2C2C2E; padding: 10px 12px 18px; z-index: 50; }
+  /* Кастомная клавиатура + Запас (RIR) */
+  .keypad-sheet { position: fixed; left: 0; right: 0; bottom: 0; background: #121215; border-top: 1px solid var(--border); padding: 10px 12px 18px; z-index: 50; }
   .rir-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; gap: 6px; }
-  .rir-dot { width: 32px; height: 32px; border-radius: 50%; border: none; font-size: 12px; font-weight: 700; color: #000; cursor: pointer; opacity: 0.75; }
+  .rir-dot { width: 32px; height: 32px; border-radius: 50%; border: none; font-size: 12px; font-weight: 700; color: #000; cursor: pointer; opacity: 0.72; }
   .rir-dot.selected { opacity: 1; transform: scale(1.15); box-shadow: 0 0 0 2px #fff; }
   .numpad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-  .key { height: 48px; border-radius: 24px; background: #222225; border: none; color: #fff; font-size: 20px; font-weight: 500; cursor: pointer; }
+  .key { height: 48px; border-radius: 24px; background: #222226; border: none; color: #fff; font-size: 20px; font-weight: 500; cursor: pointer; }
   .key.ok { background: #fff; color: #000; font-weight: 700; }
 
-  /* Таймер-баннер */
+  /* Таймер */
   .timer-pill { position: fixed; top: 64px; right: 16px; background: var(--green); color: #000; font-weight: 700; padding: 8px 14px; border-radius: 20px; z-index: 40; box-shadow: 0 4px 14px rgba(0,0,0,0.5); cursor: pointer; }
 
+  /* Формы */
+  .field-label { font-size: 12px; color: var(--muted); margin: 0 0 5px 4px; display: block; }
+  input.std-input, select.std-input { width: 100%; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--border); background: #101013; color: #fff; font-size: 15px; margin-bottom: 12px; outline: none; }
+  input.std-input:focus { border-color: #fff; }
+  .seg-ctrl { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: #101013; padding: 4px; border-radius: 14px; border: 1px solid var(--border); margin-bottom: 12px; }
+  .seg-btn { padding: 10px; border: none; border-radius: 10px; background: transparent; color: var(--muted); font-size: 14px; font-weight: 600; cursor: pointer; }
+  .seg-btn.active { background: #fff; color: #000; }
+  .primary-btn { width: 100%; padding: 14px; border-radius: 16px; border: none; background: #fff; color: #000; font-size: 15px; font-weight: 700; cursor: pointer; }
+
+  /* Визуальная шкала % жира */
+  .fat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+  .fat-card { background: #101013; border: 1px solid var(--border); border-radius: 14px; padding: 8px 6px; text-align: center; cursor: pointer; transition: all 0.15s; }
+  .fat-card.selected { border-color: var(--green); background: rgba(52,199,89,0.12); }
+  .fat-card svg { width: 48px; height: 64px; display: block; margin: 0 auto 4px; }
+  .fat-pct { font-size: 13px; font-weight: 700; color: #fff; }
+  .fat-desc { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+  /* Результаты КБЖУ */
+  .macro-card { background: #101013; border: 1px solid var(--border); border-radius: 16px; padding: 12px 14px; margin-top: 10px; }
+  .macro-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-weight: 700; font-size: 14px; }
+  .macro-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; text-align: center; }
+  .macro-box { background: var(--card); border-radius: 10px; padding: 7px 4px; }
+  .macro-box b { display: block; font-size: 14px; }
+  .macro-box span { font-size: 10px; color: var(--muted); }
+
   /* Нижняя навигация */
-  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(20,20,22,0.96); border-top: 1px solid #2C2C2E; display: flex; justify-content: space-around; padding: 10px 0 16px; z-index: 30; }
+  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(18,18,21,0.96); backdrop-filter: blur(12px); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 10px 0 16px; z-index: 30; }
   .nav-item { background: none; border: none; color: var(--muted); font-size: 11px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
   .nav-item.active { color: #fff; }
   .nav-item span { font-size: 20px; }
-
-  input.std-input, select.std-input { width: 100%; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--border); background: #141416; color: #fff; font-size: 15px; margin-bottom: 10px; }
-  .primary-btn { width: 100%; padding: 14px; border-radius: 16px; border: none; background: #fff; color: #000; font-size: 15px; font-weight: 700; cursor: pointer; }
 </style>
 </head>
 <body>
@@ -91,45 +139,61 @@
 <div id="viewHome">
   <div class="topbar">
     <div>
-      <div class="title" id="userName">Загрузка...</div>
+      <div class="title" style="padding:0" id="userName">Загрузка...</div>
       <div class="muted" id="userRole">Подключение к таблице</div>
     </div>
     <button class="circle-btn" onclick="loadInit()">↻</button>
   </div>
 
   <div class="container">
-    <div class="card">
-      <div class="card-title">Мои программы</div>
-      <div id="programsList"><div class="muted">Загрузка программ...</div></div>
-    </div>
+    <div class="section-label">Мои программы</div>
+    <div id="programsList"><div class="card"><div class="muted">Загрузка программ...</div></div></div>
 
+    <div class="section-label">Инструменты</div>
     <div class="grid-2">
-      <button class="tool-btn" onclick="openView('viewKbju')"><span class="ico">🥗</span><span class="lbl">Рассчитать КБЖУ</span></button>
-      <button class="tool-btn" onclick="openView('view1RM')"><span class="ico">🏋️</span><span class="lbl">Расчет 1ПМ</span></button>
-      <button class="tool-btn" onclick="openRecords()"><span class="ico">🏆</span><span class="lbl">Мои рекорды</span></button>
-      <button class="tool-btn" onclick="openView('viewTech')"><span class="ico">📖</span><span class="lbl">База техники</span></button>
+      <button class="tool-btn" onclick="openMyStats()">
+        <span class="ico">📈</span><span class="lbl">Моя статистика</span><span class="sub">Прогресс весов</span>
+      </button>
+      <button class="tool-btn" onclick="openRecords()">
+        <span class="ico">🏆</span><span class="lbl">Мои рекорды</span><span class="sub">База 1ПМ</span>
+      </button>
+      <button class="tool-btn" onclick="openView('viewKbju')">
+        <span class="ico">🥗</span><span class="lbl">Расчет КБЖУ</span><span class="sub">По СМТ и % жира</span>
+      </button>
+      <button class="tool-btn" onclick="openView('view1RM')">
+        <span class="ico">🏋️</span><span class="lbl">Калькулятор 1ПМ</span><span class="sub">Эпли • Бжицки</span>
+      </button>
     </div>
+    <button class="tool-btn" style="width:100%;display:flex;align-items:center;gap:12px" onclick="openView('viewTech')">
+      <span class="ico" style="margin:0">📖</span>
+      <div><span class="lbl">База техники</span><span class="sub">Разборы упражнений</span></div>
+    </button>
   </div>
 </div>
 
-<!-- ЭКРАН 2: ТРЕНИРОВКА (НЕДЕЛИ / ДНИ / УПРАЖНЕНИЯ) -->
+<!-- ЭКРАН 2: ПРОГРАММА (НЕДЕЛИ / ДНИ / УПРАЖНЕНИЯ) -->
 <div id="viewProgram" class="hidden">
   <div class="topbar">
-    <button class="circle-btn" onclick="openView('viewHome')">‹</button>
+    <button class="circle-btn" onclick="goBackFromClientSub()">‹</button>
     <div class="title" id="progTitle">Программа</div>
     <div class="pill-group">
       <button class="pill-btn" onclick="toggleSupersetMode()" title="Связать суперсет">🔗</button>
     </div>
   </div>
   <div class="container">
-    <select id="weekSelect" class="std-input" onchange="renderDays()"></select>
-    <select id="daySelect" class="std-input" onchange="renderExercises()"></select>
-    <div id="supersetHint" class="muted hidden" style="margin-bottom:10px;color:var(--blue)">🔗 Нажмите на 2 упражнения, чтобы объединить их в суперсет</div>
+    <div class="section-label" style="margin-top:0">Неделя</div>
+    <div id="weekChips" class="chips-scroll"></div>
+
+    <div class="section-label">Тренировочный день</div>
+    <div id="dayCards" class="day-cards"></div>
+
+    <div id="supersetHint" class="muted hidden" style="margin:6px 0 10px;color:var(--blue)">🔗 Нажмите на 2 упражнения, чтобы объединить их в суперсет</div>
+    <div class="section-label">Упражнения</div>
     <div id="exercisesList"></div>
   </div>
 </div>
 
-<!-- ЭКРАН 3: ЗАПИСЬ ПОДХОДОВ (КАК НА СКРИНШОТЕ) -->
+<!-- ЭКРАН 3: ЗАПИСЬ ПОДХОДОВ -->
 <div id="viewWorkout" class="hidden">
   <div class="topbar">
     <button class="circle-btn" onclick="closeWorkout()">‹</button>
@@ -193,38 +257,80 @@
 
 <!-- ЭКРАН 4: КЛИЕНТЫ (ТОЛЬКО ДЛЯ ТРЕНЕРА) -->
 <div id="viewClients" class="hidden">
-  <div class="topbar"><div class="title">👥 Мои клиенты</div></div>
+  <div class="topbar"><div class="title" style="padding:0">👥 Мои клиенты</div></div>
   <div class="container" id="clientsList"></div>
 </div>
 
-<!-- ЭКРАН 5: КБЖУ -->
+<!-- ЭКРАН 5: КБЖУ (ПО СМТ И % ЖИРА) -->
 <div id="viewKbju" class="hidden">
-  <div class="topbar"><button class="circle-btn" onclick="openView('viewHome')">‹</button><div class="title">🥗 Калькулятор КБЖУ</div><div></div></div>
+  <div class="topbar">
+    <button class="circle-btn" onclick="openView('viewHome')">‹</button>
+    <div class="title">🥗 Калькулятор КБЖУ</div>
+    <div></div>
+  </div>
   <div class="container">
     <div class="card">
-      <input id="kWeight" class="std-input" type="number" placeholder="Вес (кг)">
-      <input id="kHeight" class="std-input" type="number" placeholder="Рост (см)">
-      <input id="kAge" class="std-input" type="number" placeholder="Возраст (лет)">
-      <select id="kGender" class="std-input"><option value="М">Мужской</option><option value="Ж">Женский</option></select>
+      <label class="field-label">Пол</label>
+      <div class="seg-ctrl">
+        <button class="seg-btn active" id="gBtnM" onclick="selectGender('М')">Мужской</button>
+        <button class="seg-btn" id="gBtnF" onclick="selectGender('Ж')">Женский</button>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:0">
+        <div>
+          <label class="field-label">Вес (ОМТ, кг)</label>
+          <input id="kWeight" class="std-input" type="number" step="0.1" placeholder="70" oninput="updateSmtPreview()">
+        </div>
+        <div>
+          <label class="field-label">Рост (см)</label>
+          <input id="kHeight" class="std-input" type="number" placeholder="175">
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:0">
+        <div>
+          <label class="field-label">Возраст (лет)</label>
+          <input id="kAge" class="std-input" type="number" placeholder="25">
+        </div>
+        <div>
+          <label class="field-label">Процент жира (%)</label>
+          <input id="kFat" class="std-input" type="number" step="0.5" placeholder="20" oninput="updateSmtPreview()">
+        </div>
+      </div>
+
+      <div id="smtPreview" class="muted" style="margin:-4px 0 12px 4px;color:var(--green)"></div>
+
+      <label class="field-label">Ориентир % жира (нажмите на подходящий тип):</label>
+      <div id="fatVisualGrid" class="fat-grid"></div>
+
+      <label class="field-label">Коэффициент активности (AMR)</label>
       <select id="kAmr" class="std-input">
-        <option value="1.2">1.2 — Сидячий</option>
-        <option value="1.375">1.375 — 1–3 трен/нед</option>
-        <option value="1.55" selected>1.55 — 3–5 трен/нед</option>
-        <option value="1.725">1.725 — 6–7 трен/нед</option>
+        <option value="1.2">1.2 — Сидячий образ жизни</option>
+        <option value="1.375">1.375 — Умеренная (1–3 трен/нед)</option>
+        <option value="1.55" selected>1.55 — Средняя (3–5 трен/нед)</option>
+        <option value="1.725">1.725 — Высокая (6–7 трен/нед)</option>
+        <option value="1.9">1.9 — Спортсмены (интенсивно 6–7/нед)</option>
       </select>
-      <button class="primary-btn" onclick="calcKbju()">Рассчитать</button>
-      <div id="kbjuResult" style="margin-top:14px"></div>
+
+      <button class="primary-btn" onclick="calcKbju()">Рассчитать КБЖУ</button>
+      <div id="kbjuResult"></div>
     </div>
   </div>
 </div>
 
-<!-- ЭКРАН 6: 1ПМ -->
+<!-- ЭКРАН 6: КАЛЬКУЛЯТОР 1ПМ -->
 <div id="view1RM" class="hidden">
-  <div class="topbar"><button class="circle-btn" onclick="openView('viewHome')">‹</button><div class="title">🏋️ Калькулятор 1ПМ</div><div></div></div>
+  <div class="topbar">
+    <button class="circle-btn" onclick="openView('viewHome')">‹</button>
+    <div class="title">🏋️ Калькулятор 1ПМ</div>
+    <div></div>
+  </div>
   <div class="container">
     <div class="card">
-      <input id="rmW" class="std-input" type="number" placeholder="Рабочий вес (кг)">
-      <input id="rmR" class="std-input" type="number" placeholder="Повторения">
+      <label class="field-label">Рабочий вес (кг)</label>
+      <input id="rmW" class="std-input" type="number" step="0.5" placeholder="80">
+      <label class="field-label">Количество повторений</label>
+      <input id="rmR" class="std-input" type="number" placeholder="5">
       <button class="primary-btn" onclick="calc1RM()">Рассчитать 1ПМ</button>
       <div id="rmResult" style="margin-top:14px"></div>
     </div>
@@ -233,30 +339,50 @@
 
 <!-- ЭКРАН 7: РЕКОРДЫ -->
 <div id="viewRecords" class="hidden">
-  <div class="topbar"><button class="circle-btn" onclick="openView('viewHome')">‹</button><div class="title">🏆 Мои рекорды (1ПМ)</div><div></div></div>
+  <div class="topbar">
+    <button class="circle-btn" onclick="goBackFromClientSub()">‹</button>
+    <div class="title" id="recordsTitle">🏆 Мои рекорды (1ПМ)</div>
+    <div></div>
+  </div>
   <div class="container" id="recordsList"></div>
 </div>
 
 <!-- ЭКРАН 8: ТЕХНИКА -->
 <div id="viewTech" class="hidden">
-  <div class="topbar"><button class="circle-btn" onclick="openView('viewHome')">‹</button><div class="title">📖 База техники</div><div></div></div>
+  <div class="topbar">
+    <button class="circle-btn" onclick="openView('viewHome')">‹</button>
+    <div class="title">📖 База техники</div>
+    <div></div>
+  </div>
   <div class="container" id="techList"></div>
+</div>
+
+<!-- ЭКРАН 9: СТАТИСТИКА -->
+<div id="viewStats" class="hidden">
+  <div class="topbar">
+    <button class="circle-btn" onclick="goBackFromClientSub()">‹</button>
+    <div class="title" id="statsTitle">📈 Статистика</div>
+    <div></div>
+  </div>
+  <div class="container" id="statsList"></div>
 </div>
 
 <!-- НИЖНЕЕ МЕНЮ -->
 <div class="bottom-nav" id="bottomNav">
-  <button class="nav-item active" onclick="openView('viewHome')"><span>🏠</span>Главная</button>
+  <button class="nav-item active" id="navHome" onclick="openView('viewHome')"><span>🏠</span>Главная</button>
+  <button class="nav-item" id="navStats" onclick="openMyStats()"><span>📈</span>Статистика</button>
   <button class="nav-item hidden" id="navClients" onclick="openView('viewClients')"><span>👥</span>Клиенты</button>
-  <button class="nav-item" onclick="openView('viewTech')"><span>📖</span>Техника</button>
+  <button class="nav-item" id="navTech" onclick="openView('viewTech')"><span>📖</span>Техника</button>
 </div>
 
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbyMkxJ6SXzSNvtkp7OO05oDuOqbqOGGUDHb_kbTShOER5soxAHlchdLLeYsu8yPATPn/exec";
 const tg = window.Telegram?.WebApp;
 if (tg) { tg.ready(); tg.expand(); }
-const CHAT_ID = tg?.initDataUnsafe?.user?.id || "404570922"; // fallback для теста в браузере
+const CHAT_ID = tg?.initDataUnsafe?.user?.id || "404570922";
 
 let appData = null, currentProg = null, currentWeeks = [], currentRecords = [], currentEx = null;
+let selectedWeekIdx = 0, selectedDayIdx = 0, backView = "viewHome", kbjuGender = "М";
 let activeInput = null, activeRir = "", supersetMode = false, supersetPick = [];
 let timerPresets = [60, 90, 120, 180], timerPresetIdx = 1, timerInterval = null, timerLeft = 0;
 
@@ -266,78 +392,172 @@ async function apiCall(params) {
   return await r.json();
 }
 
+function getMinTargetSets(targetStr) {
+  const nums = String(targetStr || "").match(/\d+/g);
+  if (!nums || !nums.length) return 3;
+  return Math.min(Math.min(...nums.map(Number)), 4);
+}
+function isExDone(ex) {
+  const filled = (ex.sets || []).filter(s => String(s.w || "").trim() !== "" && String(s.r || "").trim() !== "").length;
+  return filled >= getMinTargetSets(ex.targetSets);
+}
+function isDayDone(day) {
+  return (day.exercises || []).length > 0 && day.exercises.every(isExDone);
+}
+function isWeekDone(week) {
+  return (week.days || []).length > 0 && week.days.every(isDayDone);
+}
+
 async function loadInit() {
-  const res = await apiCall({ action: "init" });
-  if (!res.ok) { document.getElementById("userName").innerText = "Нет доступа"; document.getElementById("userRole").innerText = res.error; return; }
-  appData = res;
-  document.getElementById("userName").innerText = res.user.name;
-  document.getElementById("userRole").innerText = res.isTrainer ? "👑 Тренер • ID: " + CHAT_ID : "💪 Клиент • ID: " + CHAT_ID;
-  if (res.isTrainer) document.getElementById("navClients").classList.remove("hidden");
+  try {
+    const res = await apiCall({ action: "init" });
+    if (!res.ok) {
+      document.getElementById("userName").innerText = "Нет доступа";
+      document.getElementById("userRole").innerText = res.error;
+      return;
+    }
+    appData = res;
+    document.getElementById("userName").innerText = res.user.name;
+    const trainerLabel = res.user.trainerName ? ` • Тренер: ${res.user.trainerName}` : "";
+    document.getElementById("userRole").innerText = res.isTrainer
+      ? `👑 Тренер (${res.user.trainerName || res.user.name})`
+      : `💪 Клиент${trainerLabel}`;
+    if (res.isTrainer) document.getElementById("navClients").classList.remove("hidden");
 
-  // Программы
-  const pEl = document.getElementById("programsList");
-  pEl.innerHTML = res.programs.map((p, i) => `
-    <div class="list-item" onclick="openProgram(${i})">
-      <div><b>${p.title}</b><div class="muted">${p.sheetName}</div></div>
-      <span class="badge ${p.status==='Активна'?'active':''}">${p.status}</span>
-    </div>`).join("") || "<div class='muted'>Программ пока нет</div>";
+    const pEl = document.getElementById("programsList");
+    pEl.innerHTML = res.programs.map((p, i) => `
+      <div class="list-item" onclick="backView='viewHome'; openProgram(${i})">
+        <div><b>${p.title}</b><div class="muted">${p.sheetName}</div></div>
+        <span class="badge ${p.status==='Активна'?'active':''}">${p.status}</span>
+      </div>`).join("") || "<div class='card'><div class='muted'>Программ пока нет</div></div>";
 
-  // Клиенты тренера
-  if (res.isTrainer) {
-    document.getElementById("clientsList").innerHTML = res.clients.map((c, ci) => `
-      <div class="card">
-        <div class="card-title">👤 ${c.name}</div>
-        ${c.programs.map((p, pi) => `<div class="list-item" onclick="openClientProgram(${ci}, ${pi})"><span>${p.title}</span><span class="badge active">Открыть</span></div>`).join("")}
-      </div>`).join("");
+    if (res.isTrainer) {
+      document.getElementById("clientsList").innerHTML = res.clients.map((c, ci) => `
+        <div class="card">
+          <div class="card-title">👤 ${c.name}</div>
+          ${c.programs.map((p, pi) => `
+            <div style="margin-bottom:10px">
+              <div class="muted" style="margin-bottom:6px">${p.title}</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
+                <button class="tool-btn" style="padding:10px;text-align:center" onclick="openClientSection(${ci},${pi},'plan')">📋 План</button>
+                <button class="tool-btn" style="padding:10px;text-align:center" onclick="openClientSection(${ci},${pi},'records')">🏆 1ПМ</button>
+                <button class="tool-btn" style="padding:10px;text-align:center" onclick="openClientSection(${ci},${pi},'stats')">📈 Стат.</button>
+              </div>
+            </div>`).join("")}
+        </div>`).join("");
+    }
+
+    document.getElementById("techList").innerHTML = res.technique.map(t => `
+      <div class="card"><div class="card-title">${t.name}</div><div class="muted">${t.desc}</div></div>`).join("") || "<div class='card'><div class='muted'>База техники пока пуста</div></div>";
+  } catch (e) {
+    document.getElementById("userName").innerText = "Ошибка связи";
+    document.getElementById("userRole").innerText = e.message;
   }
-
-  // Техника
-  document.getElementById("techList").innerHTML = res.technique.map(t => `
-    <div class="card"><div class="card-title">${t.name}</div><div class="muted">${t.desc}</div></div>`).join("");
 }
 
 function openView(id) {
-  ["viewHome","viewProgram","viewWorkout","viewClients","viewKbju","view1RM","viewRecords","viewTech"].forEach(v => document.getElementById(v).classList.add("hidden"));
+  ["viewHome","viewProgram","viewWorkout","viewClients","viewKbju","view1RM","viewRecords","viewTech","viewStats"]
+    .forEach(v => document.getElementById(v).classList.add("hidden"));
   document.getElementById(id).classList.remove("hidden");
   document.getElementById("bottomNav").classList.toggle("hidden", id === "viewWorkout");
+
+  document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
+  if (id === "viewHome") document.getElementById("navHome").classList.add("active");
+  if (id === "viewStats") document.getElementById("navStats").classList.add("active");
+  if (id === "viewClients") document.getElementById("navClients").classList.add("active");
+  if (id === "viewTech") document.getElementById("navTech").classList.add("active");
+}
+
+function goBackFromClientSub() { openView(backView); }
+
+async function ensureMyProgramLoaded() {
+  if (!currentProg && appData?.programs?.length) currentProg = appData.programs[0];
+  if (!currentProg) return false;
+  const res = await apiCall({
+    action: "getProgram",
+    spreadsheetId: currentProg.spreadsheetId,
+    sheetName: currentProg.sheetName,
+    sheet1rmName: currentProg.sheet1rmName
+  });
+  currentWeeks = res.weeks || [];
+  currentRecords = res.records || [];
+  return true;
 }
 
 async function openProgram(idx) {
   currentProg = appData.programs[idx];
   await loadProgramData(currentProg);
 }
-async function openClientProgram(ci, pi) {
-  currentProg = appData.clients[ci].programs[pi];
-  await loadProgramData(currentProg);
-}
 
 async function loadProgramData(prog) {
   document.getElementById("progTitle").innerText = prog.title;
   openView("viewProgram");
-  document.getElementById("exercisesList").innerHTML = "<div class='muted'>Загрузка тренировок...</div>";
+  document.getElementById("weekChips").innerHTML = "";
+  document.getElementById("dayCards").innerHTML = "";
+  document.getElementById("exercisesList").innerHTML = "<div class='card'><div class='muted'>Загрузка тренировок...</div></div>";
+
   const res = await apiCall({ action: "getProgram", spreadsheetId: prog.spreadsheetId, sheetName: prog.sheetName, sheet1rmName: prog.sheet1rmName });
   currentWeeks = res.weeks || [];
   currentRecords = res.records || [];
-  document.getElementById("weekSelect").innerHTML = currentWeeks.map((w, i) => `<option value="${i}">${w.title}</option>`).join("");
+  selectedWeekIdx = 0;
+  selectedDayIdx = 0;
+  renderWeeks();
+}
+
+function renderWeeks() {
+  const el = document.getElementById("weekChips");
+  el.innerHTML = currentWeeks.map((w, i) => {
+    const done = isWeekDone(w);
+    const shortTitle = (w.title.match(/НЕДЕЛЯ\s*\d+/i) || [`Неделя ${i+1}`])[0];
+    const cleanLabel = shortTitle.charAt(0).toUpperCase() + shortTitle.slice(1).toLowerCase();
+    return `<button class="week-chip ${i===selectedWeekIdx?'active':''} ${done?'done':''}" onclick="selectWeek(${i})">
+      ${done ? '<span class="check-pill">✓</span>' : ''} ${cleanLabel}
+    </button>`;
+  }).join("");
   renderDays();
 }
 
+function selectWeek(idx) { selectedWeekIdx = idx; selectedDayIdx = 0; renderWeeks(); }
+
 function renderDays() {
-  const wIdx = document.getElementById("weekSelect").value || 0;
-  const days = currentWeeks[wIdx]?.days || [];
-  document.getElementById("daySelect").innerHTML = days.map((d, i) => `<option value="${i}">${d.title}</option>`).join("");
+  const days = currentWeeks[selectedWeekIdx]?.days || [];
+  const el = document.getElementById("dayCards");
+  el.innerHTML = days.map((d, i) => {
+    const done = isDayDone(d);
+    const doneCnt = (d.exercises || []).filter(isExDone).length;
+    const totalCnt = (d.exercises || []).length;
+    const parts = d.title.split("•");
+    const dayNumLabel = parts[0].trim();
+    const daySub = parts[1] ? parts[1].trim() : `${doneCnt} из ${totalCnt} упр.`;
+    return `<div class="day-card ${i===selectedDayIdx?'active':''} ${done?'done':''}" onclick="selectDay(${i})">
+      <div class="day-card-top">
+        <span>${dayNumLabel}</span>
+        ${done ? '<span class="check-pill">✓</span>' : `<span class="badge">${doneCnt}/${totalCnt}</span>`}
+      </div>
+      <div class="day-card-sub">${daySub}</div>
+    </div>`;
+  }).join("");
   renderExercises();
 }
 
+function selectDay(idx) { selectedDayIdx = idx; renderDays(); }
+
 function renderExercises() {
-  const wIdx = document.getElementById("weekSelect").value || 0;
-  const dIdx = document.getElementById("daySelect").value || 0;
-  const exs = currentWeeks[wIdx]?.days[dIdx]?.exercises || [];
-  document.getElementById("exercisesList").innerHTML = exs.map((ex, i) => `
-    <div class="list-item ${ex.superset ? 'superset' : ''}" onclick="handleExClick(${wIdx},${dIdx},${i})">
-      <div><b>${ex.name}</b><div class="muted">${ex.targetSets} подх. × ${ex.targetReps} ${ex.planWeight ? '• План: '+ex.planWeight+' кг' : ''}</div></div>
-      <span class="badge">${ex.sets.filter(s=>s.w).length}/4</span>
-    </div>`).join("");
+  const exs = currentWeeks[selectedWeekIdx]?.days[selectedDayIdx]?.exercises || [];
+  document.getElementById("exercisesList").innerHTML = exs.map((ex, i) => {
+    const done = isExDone(ex);
+    const doneSets = ex.sets.filter(s => String(s.w || "").trim() !== "" && String(s.r || "").trim() !== "").length;
+    return `<div class="list-item ${done?'done':''} ${ex.superset?'superset':''}" onclick="handleExClick(${selectedWeekIdx},${selectedDayIdx},${i})">
+      <div class="ex-left">
+        <div class="status-dot ${done?'done':''}">✓</div>
+        <div style="min-width:0">
+          <div style="font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${ex.name}</div>
+          <div class="muted">${ex.targetSets} подх. × ${ex.targetReps} ${ex.planWeight ? '• План: '+ex.planWeight+' кг' : ''}</div>
+        </div>
+      </div>
+      <span class="badge ${done?'active':''}">${done ? 'Готово' : `${doneSets}/${getMinTargetSets(ex.targetSets)}`}</span>
+    </div>`;
+  }).join("") || "<div class='card'><div class='muted'>Упражнения не найдены</div></div>";
 }
 
 function toggleSupersetMode() {
@@ -359,7 +579,7 @@ function handleExClick(wIdx, dIdx, eIdx) {
   activeRir = ex.rir || "";
   document.getElementById("exTitle").innerText = ex.name;
   document.getElementById("exTarget").innerText = `Цель: ${ex.targetSets} подх. × ${ex.targetReps} повт.`;
-  document.getElementById("exPlan").innerText = ex.planWeight ? `План вес: ${ex.planWeight} кг (Коэфф: ${ex.coeff})` : `Коэфф: ${ex.coeff}`;
+  document.getElementById("exPlan").innerText = ex.planWeight ? `План вес: ${ex.planWeight} кг • Коэфф: ${ex.coeff}` : `Коэфф: ${ex.coeff}`;
   renderSets();
   openView("viewWorkout");
 }
@@ -375,27 +595,18 @@ function renderSets() {
     </div>`).join("");
 }
 
-function toggleDrop(i) {
-  currentEx.sets[i].drop = !currentEx.sets[i].drop;
-  renderSets();
-}
-
-function addSetRow() {
-  if (currentEx.sets.length < 4) { currentEx.sets.push({ w: "", r: "" }); renderSets(); }
-}
-
+function toggleDrop(i) { currentEx.sets[i].drop = !currentEx.sets[i].drop; renderSets(); }
+function addSetRow() { if (currentEx.sets.length < 4) { currentEx.sets.push({ w: "", r: "" }); renderSets(); } }
 function focusField(i, field) {
   activeInput = { i, field };
   document.querySelectorAll(".set-input").forEach(el => el.classList.remove("active"));
   document.getElementById(`in_${field}_${i}`).classList.add("active");
   document.getElementById("keypadSheet").classList.remove("hidden");
 }
-
 function hideKeypad() {
   document.getElementById("keypadSheet").classList.add("hidden");
   document.querySelectorAll(".set-input").forEach(el => el.classList.remove("active"));
 }
-
 function padPress(ch) {
   if (!activeInput) return;
   const s = currentEx.sets[activeInput.i];
@@ -403,7 +614,6 @@ function padPress(ch) {
   renderSets();
   document.getElementById(`in_${activeInput.field}_${activeInput.i}`).classList.add("active");
 }
-
 function padBack() {
   if (!activeInput) return;
   const s = currentEx.sets[activeInput.i];
@@ -411,14 +621,12 @@ function padBack() {
   renderSets();
   document.getElementById(`in_${activeInput.field}_${activeInput.i}`).classList.add("active");
 }
-
 function nextField() {
   if (!activeInput) return;
   if (activeInput.field === "w") focusField(activeInput.i, "r");
   else if (activeInput.i + 1 < currentEx.sets.length) focusField(activeInput.i + 1, "w");
   else hideKeypad();
 }
-
 function setRir(val, btn) {
   activeRir = val;
   document.querySelectorAll(".rir-dot").forEach(b => b.classList.remove("selected"));
@@ -445,9 +653,9 @@ async function saveSetRow(i) {
   });
 }
 
-function closeWorkout() { hideKeypad(); openView("viewProgram"); renderExercises(); }
+function closeWorkout() { hideKeypad(); openView("viewProgram"); renderWeeks(); }
 
-/* Таймер отдыха */
+/* Таймер */
 function cycleTimerPreset() {
   timerPresetIdx = (timerPresetIdx + 1) % timerPresets.length;
   const sec = timerPresets[timerPresetIdx];
@@ -458,8 +666,7 @@ function cycleTimerPreset() {
 function startTimer(sec) {
   clearInterval(timerInterval);
   timerLeft = sec;
-  const el = document.getElementById("timerBanner");
-  el.classList.remove("hidden");
+  document.getElementById("timerBanner").classList.remove("hidden");
   updateTimerText();
   timerInterval = setInterval(() => {
     timerLeft--;
@@ -476,36 +683,225 @@ function updateTimerText() {
 }
 function stopTimer() { clearInterval(timerInterval); document.getElementById("timerBanner").classList.add("hidden"); }
 
-/* КБЖУ, 1ПМ, Рекорды */
-function calcKbju() {
-  const w = +document.getElementById("kWeight").value, h = +document.getElementById("kHeight").value, a = +document.getElementById("kAge").value;
-  const g = document.getElementById("kGender").value, amr = +document.getElementById("kAmr").value;
-  if (!w || !h || !a) return;
-  const bmr = g === "М" ? 10*w + 6.25*h - 5*a + 5 : 10*w + 6.25*h - 5*a - 161;
-  const kcal = Math.round(bmr * amr);
-  const p = Math.round(w * 1.8), f = Math.round(w * 0.9), c = Math.max(0, Math.round((kcal - p*4 - f*9)/4));
-  document.getElementById("kbjuResult").innerHTML = `🔥 <b>${kcal} ккал</b><br>🥩 Белки: ${p} г • 🥑 Жиры: ${f} г • 🍚 Углеводы: ${c} г`;
+/* Рекорды и статистика */
+async function openMyStats() {
+  backView = "viewHome";
+  openView("viewStats");
+  document.getElementById("statsTitle").innerText = "📈 Моя статистика";
+  document.getElementById("statsList").innerHTML = "<div class='card'><div class='muted'>Загрузка статистики...</div></div>";
+  if (await ensureMyProgramLoaded()) renderStatsList("📈 Моя статистика");
+  else document.getElementById("statsList").innerHTML = "<div class='card'><div class='muted'>Программа не найдена</div></div>";
 }
-function calc1RM() {
-  const w = +document.getElementById("rmW").value, r = +document.getElementById("rmR").value;
-  if (!w || !r) return;
-  const epley = Math.round(((w * r) / 30 + w) / 2.5) * 2.5;
-  document.getElementById("rmResult").innerHTML = `⭐️ Рекомендуемый 1ПМ: <b>${epley} кг</b>`;
-}
+
 async function openRecords() {
-  if (!currentProg && appData?.programs?.length) { currentProg = appData.programs[0]; await loadProgramData(currentProg); }
+  backView = "viewHome";
   openView("viewRecords");
-  document.getElementById("recordsList").innerHTML = currentRecords.map((r, i) => `
-    <div class="list-item">
-      <span>${r.name}</span>
-      <input style="width:76px;text-align:center;border-radius:10px;border:1px solid #333;background:#141416;color:#fff;padding:6px" value="${r.weight}" onchange="save1RM(${r.row}, this.value)">
-    </div>`).join("");
+  document.getElementById("recordsTitle").innerText = "🏆 Мои рекорды (1ПМ)";
+  document.getElementById("recordsList").innerHTML = "<div class='card'><div class='muted'>Загрузка рекордов...</div></div>";
+  if (await ensureMyProgramLoaded()) renderRecordsList("🏆 Мои рекорды (1ПМ)");
 }
+
+async function openClientSection(ci, pi, section) {
+  const client = appData.clients[ci];
+  currentProg = client.programs[pi];
+  backView = "viewClients";
+
+  if (section === "plan") { await loadProgramData(currentProg); return; }
+
+  openView(section === "records" ? "viewRecords" : "viewStats");
+  const res = await apiCall({ action: "getProgram", spreadsheetId: currentProg.spreadsheetId, sheetName: currentProg.sheetName, sheet1rmName: currentProg.sheet1rmName });
+  currentWeeks = res.weeks || [];
+  currentRecords = res.records || [];
+
+  if (section === "records") renderRecordsList(`🏆 Рекорды: ${client.name}`);
+  else renderStatsList(`📈 Статистика: ${client.name}`);
+}
+
+function renderRecordsList(title) {
+  document.getElementById("recordsTitle").innerText = title;
+  openView("viewRecords");
+  document.getElementById("recordsList").innerHTML = currentRecords.map(r => `
+    <div class="list-item">
+      <span style="font-size:14px;font-weight:600">${r.name}</span>
+      <input style="width:78px;text-align:center;border-radius:12px;border:1px solid var(--border);background:#101013;color:#fff;padding:8px;font-weight:700" value="${r.weight}" onchange="save1RM(${r.row}, this.value)">
+    </div>`).join("") || "<div class='card'><div class='muted'>Нет данных 1ПМ</div></div>";
+}
+
 async function save1RM(row, weight) {
   await apiCall({ action: "save1RM", spreadsheetId: currentProg.spreadsheetId, sheet1rmName: currentProg.sheet1rmName, row, weight });
   if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred("success");
 }
 
+function renderStatsList(title) {
+  document.getElementById("statsTitle").innerText = title;
+  openView("viewStats");
+
+  const stats = {};
+  currentWeeks.forEach((w, wIdx) => {
+    const wNum = wIdx + 1;
+    (w.days || []).forEach(d => {
+      (d.exercises || []).forEach(ex => {
+        const weights = (ex.sets || [])
+          .map(s => parseFloat(String(s.w || "").replace(",", ".")))
+          .filter(v => !isNaN(v) && v > 0);
+        if (weights.length > 0) {
+          const maxW = Math.max(...weights);
+          if (!stats[ex.name]) stats[ex.name] = {};
+          if (!stats[ex.name][wNum] || maxW > stats[ex.name][wNum]) stats[ex.name][wNum] = maxW;
+        }
+      });
+    });
+  });
+
+  const keys = Object.keys(stats);
+  document.getElementById("statsList").innerHTML = keys.length
+    ? keys.map(name => {
+        const wNums = Object.keys(stats[name]).map(Number).sort((a,b) => a-b);
+        const first = stats[name][wNums[0]], last = stats[name][wNums[wNums.length - 1]];
+        const diff = (last - first).toFixed(1);
+        const diffStr = diff >= 0 ? `+${diff} кг` : `${diff} кг`;
+        const pills = wNums.map(n => `<span class="badge">Нед ${n}: ${stats[name][n]} кг</span>`).join(" ");
+        return `<div class="card">
+          <div class="card-title"><span>${name}</span><span class="badge active">${diffStr}</span></div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">${pills}</div>
+        </div>`;
+      }).join("")
+    : "<div class='card'><div class='muted'>Пока нет записанных рабочих весов. Выполните тренировку, чтобы увидеть прогресс.</div></div>";
+}
+
+/* КБЖУ (по СМТ и % жира) */
+const FAT_PRESETS = {
+  "М": [
+    { pct: 10, label: "10%", desc: "Рельеф, пресс", waist: 14, hip: 16, abs: true },
+    { pct: 15, label: "15%", desc: "Атлетичное", waist: 16, hip: 17, abs: true },
+    { pct: 20, label: "20%", desc: "Среднее", waist: 18, hip: 19, abs: false },
+    { pct: 25, label: "25%", desc: "Небольшой живот", waist: 21, hip: 21, abs: false },
+    { pct: 30, label: "30%", desc: "Выше среднего", waist: 24, hip: 23, abs: false },
+    { pct: 35, label: "35%+", desc: "Высокий %", waist: 27, hip: 26, abs: false }
+  ],
+  "Ж": [
+    { pct: 18, label: "18%", desc: "Фитнес-рельеф", waist: 12, hip: 18, abs: true },
+    { pct: 22, label: "22%", desc: "Стройное", waist: 14, hip: 19, abs: true },
+    { pct: 25, label: "25%", desc: "Среднее", waist: 16, hip: 21, abs: false },
+    { pct: 30, label: "30%", desc: "Мягкие формы", waist: 19, hip: 23, abs: false },
+    { pct: 35, label: "35%", desc: "Выше среднего", waist: 22, hip: 25, abs: false },
+    { pct: 40, label: "40%+", desc: "Высокий %", waist: 25, hip: 27, abs: false }
+  ]
+};
+
+function makeBodySvg(item, isFemale) {
+  const sh = isFemale ? 16 : 21;
+  const w = item.waist, h = item.hip;
+  const cx = 32;
+  const d = `M ${cx-sh} 22 Q ${cx-w} 38 ${cx-h} 52 L ${cx-h+4} 72 L ${cx-4} 72 L ${cx-3} 54 L ${cx+3} 54 L ${cx+4} 72 L ${cx+h-4} 72 L ${cx+h} 52 Q ${cx+w} 38 ${cx+sh} 22 Q ${cx} 18 ${cx-sh} 22 Z`;
+  const absLines = item.abs ? `<line x1="${cx}" y1="31" x2="${cx}" y2="45" stroke="#0B0B0D" stroke-width="1.3"/><line x1="${cx-4}" y1="35" x2="${cx+4}" y2="35" stroke="#0B0B0D" stroke-width="1.2"/><line x1="${cx-4}" y1="40" x2="${cx+4}" y2="40" stroke="#0B0B0D" stroke-width="1.2"/>` : "";
+  return `<svg viewBox="0 0 64 78"><circle cx="${cx}" cy="10" r="6.5" fill="#8E8E93"/><path d="${d}" fill="#D1D1D6"/>${absLines}</svg>`;
+}
+
+function renderFatVisuals() {
+  const list = FAT_PRESETS[kbjuGender];
+  const curFat = parseFloat(document.getElementById("kFat").value);
+  document.getElementById("fatVisualGrid").innerHTML = list.map(item => `
+    <div class="fat-card ${curFat === item.pct ? 'selected' : ''}" onclick="pickFat(${item.pct})">
+      ${makeBodySvg(item, kbjuGender === "Ж")}
+      <div class="fat-pct">${item.label}</div>
+      <div class="fat-desc">${item.desc}</div>
+    </div>`).join("");
+}
+
+function selectGender(g) {
+  kbjuGender = g;
+  document.getElementById("gBtnM").classList.toggle("active", g === "М");
+  document.getElementById("gBtnF").classList.toggle("active", g === "Ж");
+  renderFatVisuals();
+}
+
+function pickFat(pct) {
+  document.getElementById("kFat").value = pct;
+  renderFatVisuals();
+  updateSmtPreview();
+}
+
+function updateSmtPreview() {
+  const w = parseFloat(document.getElementById("kWeight").value);
+  const f = parseFloat(document.getElementById("kFat").value);
+  const el = document.getElementById("smtPreview");
+  if (w > 0 && f >= 3 && f <= 60) {
+    el.innerText = `✓ Сухая масса тела (СМТ): ${(w * (1 - f / 100)).toFixed(1)} кг`;
+  } else {
+    el.innerText = "";
+  }
+}
+
+function calcKbju() {
+  const w = parseFloat(document.getElementById("kWeight").value);
+  const h = parseFloat(document.getElementById("kHeight").value);
+  const a = parseFloat(document.getElementById("kAge").value);
+  const fat = parseFloat(document.getElementById("kFat").value);
+  const amr = parseFloat(document.getElementById("kAmr").value);
+
+  if (!w || !h || !a || isNaN(fat) || fat < 3 || fat > 60) {
+    document.getElementById("kbjuResult").innerHTML = "<div class='muted' style='color:var(--red);margin-top:10px'>⚠️ Заполните вес, рост, возраст и % жира (3–60%).</div>";
+    return;
+  }
+
+  const smt = w * (1 - fat / 100);
+  const bmr = kbjuGender === "М"
+    ? 88.362 + (13.397 * smt) + (4.799 * h) - (5.677 * a)
+    : 447.593 + (9.247 * smt) + (3.098 * h) - (4.330 * a);
+
+  const supportKcal = bmr * amr * 1.10;
+  const deficitKcal = supportKcal * 0.80;
+  const surplusKcal = supportKcal * 1.20;
+
+  const renderPlan = (title, color, kcal, pMult) => {
+    const prot = smt * pMult;
+    const fats = smt * 1.0;
+    const carbs = Math.max(0, (kcal - (prot * 4 + fats * 9)) / 4);
+    const fiber = (kcal / 1000) * 10;
+    return `<div class="macro-card">
+      <div class="macro-head"><span style="color:${color}">${title}</span><span>${Math.round(kcal)} ккал</span></div>
+      <div class="macro-row">
+        <div class="macro-box"><b>${Math.round(prot)} г</b><span>Белки</span></div>
+        <div class="macro-box"><b>${Math.round(fats)} г</b><span>Жиры</span></div>
+        <div class="macro-box"><b>${Math.round(carbs)} г</b><span>Углеводы</span></div>
+        <div class="macro-box"><b>${Math.round(fiber)} г</b><span>Клетчатка</span></div>
+      </div>
+    </div>`;
+  };
+
+  document.getElementById("kbjuResult").innerHTML = `
+    <div style="margin-top:14px;padding:10px 12px;border-radius:12px;background:#101013;border:1px solid var(--border);font-size:13px">
+      СМТ: <b>${smt.toFixed(1)} кг</b> • BMR: <b>${Math.round(bmr)} ккал</b>
+    </div>
+    ${renderPlan("🔴 Дефицит (-20%)", "#FF6961", deficitKcal, 2.5)}
+    ${renderPlan("⚪ Поддержка", "#FFFFFF", supportKcal, 1.6)}
+    ${renderPlan("🟢 Профицит (+20%)", "#34C759", surplusKcal, 1.6)}
+    <div class="macro-card" style="font-size:13px;line-height:1.6">
+      💧 Вода: <b>${(smt / 20).toFixed(1)} л/день</b> • 🧂 Соль: <b>${(smt / 10).toFixed(1)} г/день</b><br>
+      ☕ Кофеин: норма <b>${Math.round(w * 2.5)} мг</b> (макс. ${Math.round(w * 5)} мг)
+    </div>`;
+}
+
+function calc1RM() {
+  const w = parseFloat(document.getElementById("rmW").value);
+  const r = parseInt(document.getElementById("rmR").value, 10);
+  if (!w || !r || r <= 0 || r > 30) return;
+  const round25 = v => Math.round(v / 2.5) * 2.5;
+  const epley = round25((w * r) / 30 + w);
+  const brzycki = round25(r < 37 ? w * (36 / (37 - r)) : epley);
+  const lander = round25((100 * w) / (101.3 - 2.67123 * r));
+  const avg = round25((epley + brzycki + lander) / 3);
+  document.getElementById("rmResult").innerHTML = `
+    <div class="macro-card" style="font-size:13px;line-height:1.7">
+      • Эпли: <b>${epley} кг</b><br>
+      • Бжицки: <b>${brzycki} кг</b><br>
+      • Лэндер: <b>${lander} кг</b><br>
+      <div style="margin-top:6px;font-size:15px;color:var(--green)">⭐️ Рекомендуемый 1ПМ: <b>${avg} кг</b></div>
+    </div>`;
+}
+
+renderFatVisuals();
 loadInit();
 </script>
 </body>
