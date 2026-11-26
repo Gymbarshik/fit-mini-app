@@ -7,17 +7,9 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
   :root {
-    --bg: #0B0B0D;
-    --card: #161619;
-    --card2: #202024;
-    --border: #2D2D32;
-    --text: #FFFFFF;
-    --muted: #8E8E93;
-    --green: #34C759;
-    --green-bg: rgba(52,199,89,0.16);
-    --blue: #5E8BFF;
-    --yellow: #FFD60A;
-    --red: #FF453A;
+    --bg: #0B0B0D; --card: #161619; --card2: #202024; --border: #2D2D32;
+    --text: #FFFFFF; --muted: #8E8E93; --green: #34C759; --green-bg: rgba(52,199,89,0.16);
+    --blue: #5E8BFF; --yellow: #FFD60A; --red: #FF453A;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
   body { margin: 0; background: var(--bg); color: var(--text); padding-bottom: 92px; }
@@ -25,7 +17,7 @@
 
   .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; position: sticky; top: 0; background: rgba(11,11,13,0.92); backdrop-filter: blur(12px); z-index: 20; border-bottom: 1px solid rgba(255,255,255,0.05); }
   .circle-btn { width: 38px; height: 38px; border-radius: 50%; background: var(--card); border: 1px solid var(--border); color: #fff; font-size: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
-  .pill-group { display: flex; gap: 6px; background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 4px 10px; }
+  .pill-group { display: flex; gap: 4px; background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 4px 8px; }
   .pill-btn { background: none; border: none; color: #fff; font-size: 16px; cursor: pointer; padding: 4px 6px; }
   .title { font-size: 17px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 8px; }
 
@@ -35,7 +27,6 @@
   .muted { color: var(--muted); font-size: 13px; line-height: 1.35; }
   .section-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); margin: 12px 0 8px 4px; }
 
-  /* Прогресс-бар по неделям */
   .prog-wrap { margin-top: 10px; width: 100%; }
   .prog-head { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
   .prog-head b { color: var(--green); }
@@ -80,7 +71,6 @@
   .stat-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); padding-top: 4px; }
   .stat-meta b { color: #fff; }
 
-  /* Самочувствие */
   .mood-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 8px; }
   .mood-btn { background: #101013; border: 1px solid var(--border); border-radius: 14px; padding: 9px 4px; color: var(--muted); font-size: 11px; text-align: center; cursor: pointer; }
   .mood-btn span { display: block; font-size: 20px; margin-bottom: 2px; }
@@ -88,18 +78,22 @@
 
   .warmup-box { background: var(--card); border-radius: 18px; padding: 14px; text-align: center; margin-bottom: 14px; border: 1px solid var(--border); }
   .prev-hint { margin-top: 8px; padding: 8px 10px; border-radius: 12px; background: rgba(94,139,255,0.12); border: 1px solid rgba(94,139,255,0.3); color: #AFC8FF; font-size: 12px; line-height: 1.4; }
-  .set-header { display: grid; grid-template-columns: 50px 1fr 1fr 44px; gap: 8px; text-align: center; color: var(--muted); font-size: 12px; margin-bottom: 8px; }
-  .set-row { display: grid; grid-template-columns: 50px 1fr 1fr 44px; gap: 8px; align-items: center; margin-bottom: 10px; }
+  .pr-banner { margin-bottom: 14px; padding: 12px 14px; border-radius: 16px; background: rgba(255,214,10,0.14); border: 1px solid rgba(255,214,10,0.45); display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .pr-btn { background: var(--yellow); color: #000; border: none; border-radius: 12px; padding: 8px 12px; font-weight: 700; font-size: 12px; cursor: pointer; flex-shrink: 0; }
+
+  .set-header { display: grid; grid-template-columns: 44px 1fr 1fr 44px; gap: 8px; text-align: center; color: var(--muted); font-size: 12px; margin-bottom: 8px; }
+  .set-row { display: grid; grid-template-columns: 44px 1fr 1fr 44px; gap: 8px; align-items: center; margin-bottom: 10px; }
   .set-num { height: 42px; border-radius: 21px; border: 1px solid var(--border); background: transparent; color: #fff; font-weight: 600; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; }
   .set-num.drop { border-color: var(--yellow); color: var(--yellow); }
   .set-input { height: 42px; border-radius: 21px; border: 1px solid var(--border); background: #111114; color: #fff; text-align: center; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; cursor: pointer; }
   .set-input.active { border-color: #fff; background: #1F1F24; }
   .check-btn { width: 42px; height: 42px; border-radius: 50%; border: 1.5px solid var(--border); background: transparent; color: transparent; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
   .check-btn.done { background: var(--green); border-color: var(--green); color: #000; font-weight: 700; }
+  .check-btn.saving { color: #fff; border-color: var(--yellow); font-size: 14px; }
 
-  .action-bar { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--border); padding-top: 12px; margin-top: 8px; }
-  .action-bar button { background: none; border: none; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; padding: 6px; display: flex; align-items: center; justify-content: center; gap: 6px; }
-  .action-bar button:first-child { border-right: 1px solid var(--border); }
+  .action-bar-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; border-top: 1px solid var(--border); padding-top: 12px; margin-top: 8px; }
+  .action-bar-3 button { background: none; border: none; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; padding: 6px 2px; display: flex; align-items: center; justify-content: center; gap: 4px; border-right: 1px solid var(--border); }
+  .action-bar-3 button:last-child { border-right: none; }
 
   .keypad-sheet { position: fixed; left: 0; right: 0; bottom: 0; background: #121215; border-top: 1px solid var(--border); padding: 10px 12px 18px; z-index: 50; }
   .rir-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; gap: 6px; }
@@ -110,10 +104,16 @@
   .key.ok { background: #fff; color: #000; font-weight: 700; }
 
   .timer-pill { position: fixed; top: 64px; right: 16px; background: var(--green); color: #000; font-weight: 700; padding: 8px 14px; border-radius: 20px; z-index: 40; box-shadow: 0 4px 14px rgba(0,0,0,0.5); cursor: pointer; }
-  .toast { position: fixed; bottom: 96px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 10px 16px; border-radius: 16px; font-size: 13px; font-weight: 700; z-index: 60; box-shadow: 0 6px 20px rgba(0,0,0,0.5); }
+  .toast { position: fixed; bottom: 96px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 10px 16px; border-radius: 16px; font-size: 13px; font-weight: 700; z-index: 60; box-shadow: 0 6px 20px rgba(0,0,0,0.5); white-space: nowrap; }
+
+  /* Модалка калькулятора блинов */
+  .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.72); z-index: 70; display: flex; align-items: flex-end; justify-content: center; }
+  .modal-sheet { width: 100%; max-width: 480px; background: var(--card); border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 18px 16px 28px; border-top: 1px solid var(--border); }
+  .plates-visual { display: flex; align-items: center; justify-content: center; gap: 4px; margin: 14px 0; min-height: 54px; flex-wrap: wrap; }
+  .plate-pill { padding: 8px 12px; border-radius: 10px; font-weight: 800; font-size: 13px; color: #000; }
 
   .field-label { font-size: 12px; color: var(--muted); margin: 0 0 5px 4px; display: block; }
-  input.std-input, select.std-input { width: 100%; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--border); background: #101013; color: #fff; font-size: 15px; margin-bottom: 12px; outline: none; }
+  input.std-input, select.std-input, textarea.std-input { width: 100%; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--border); background: #101013; color: #fff; font-size: 15px; margin-bottom: 12px; outline: none; }
   .seg-ctrl { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: #101013; padding: 4px; border-radius: 14px; border: 1px solid var(--border); margin-bottom: 12px; }
   .seg-ctrl-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; background: #101013; padding: 4px; border-radius: 14px; border: 1px solid var(--border); margin-bottom: 12px; }
   .seg-btn { padding: 9px 6px; border: none; border-radius: 10px; background: transparent; color: var(--muted); font-size: 13px; font-weight: 600; cursor: pointer; }
@@ -143,8 +143,26 @@
 </head>
 <body>
 
-<div id="timerBanner" class="timer-pill hidden" onclick="stopTimer()">⏱ 01:30</div>
+<div id="timerBanner" class="timer-pill hidden" onclick="stopTimer(true)">⏱ 01:30</div>
 <div id="toast" class="toast hidden"></div>
+
+<!-- МОДАЛКА КАЛЬКУЛЯТОРА БЛИНОВ -->
+<div id="platesModal" class="modal-backdrop hidden" onclick="closePlatesModal(event)">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="card-title"><span>🏋️ Калькулятор блинов</span><button class="circle-btn" onclick="document.getElementById('platesModal').classList.add('hidden')">✕</button></div>
+    <label class="field-label">Общий вес штанги (кг)</label>
+    <input id="plateWeightInput" class="std-input" type="number" step="2.5" oninput="renderPlatesCalc()">
+    <label class="field-label">Вес грифа</label>
+    <div class="seg-ctrl-3">
+      <button class="seg-btn active" id="bar20" onclick="setBarWeight(20)">20 кг</button>
+      <button class="seg-btn" id="bar15" onclick="setBarWeight(15)">15 кг</button>
+      <button class="seg-btn" id="bar10" onclick="setBarWeight(10)">10 кг</button>
+    </div>
+    <div class="muted" style="text-align:center">На одну сторону грифа:</div>
+    <div id="platesVisual" class="plates-visual"></div>
+    <div id="platesNote" class="muted" style="text-align:center"></div>
+  </div>
+</div>
 
 <!-- ЭКРАН 1: ГЛАВНОЕ МЕНЮ -->
 <div id="viewHome">
@@ -155,31 +173,17 @@
     </div>
     <button class="circle-btn" onclick="loadInit()">↻</button>
   </div>
-
   <div class="container">
     <div class="section-label">Мои программы</div>
     <div id="programsList"><div class="card"><div class="muted">Загрузка программ...</div></div></div>
-
     <div class="section-label">Инструменты</div>
     <div class="grid-2">
-      <button class="tool-btn" onclick="openMyStats()">
-        <span class="ico">📈</span><span class="lbl">Моя статистика</span><span class="sub">e1RM и тоннаж</span>
-      </button>
-      <button class="tool-btn" onclick="openMyMeasurements()">
-        <span class="ico">📏</span><span class="lbl">Замеры</span><span class="sub">Вес, талия, форма</span>
-      </button>
-      <button class="tool-btn" onclick="openRecords()">
-        <span class="ico">🏆</span><span class="lbl">Мои рекорды</span><span class="sub">База 1ПМ</span>
-      </button>
-      <button class="tool-btn" onclick="openView('viewKbju')">
-        <span class="ico">🥗</span><span class="lbl">Расчет КБЖУ</span><span class="sub">По СМТ и % жира</span>
-      </button>
-      <button class="tool-btn" onclick="openView('view1RM')">
-        <span class="ico">🏋️</span><span class="lbl">Калькулятор 1ПМ</span><span class="sub">Эпли • Бжицки</span>
-      </button>
-      <button class="tool-btn" onclick="openView('viewTech')">
-        <span class="ico">📖</span><span class="lbl">База техники</span><span class="sub">Видео-разборы</span>
-      </button>
+      <button class="tool-btn" onclick="openMyStats()"><span class="ico">📈</span><span class="lbl">Моя статистика</span><span class="sub">e1RM и тоннаж</span></button>
+      <button class="tool-btn" onclick="openMyMeasurements()"><span class="ico">📏</span><span class="lbl">Замеры</span><span class="sub">Вес, талия, форма</span></button>
+      <button class="tool-btn" onclick="openRecords()"><span class="ico">🏆</span><span class="lbl">Мои рекорды</span><span class="sub">База 1ПМ</span></button>
+      <button class="tool-btn" onclick="openView('viewKbju')"><span class="ico">🥗</span><span class="lbl">Расчет КБЖУ</span><span class="sub">По СМТ и % жира</span></button>
+      <button class="tool-btn" onclick="openView('view1RM')"><span class="ico">🏋️</span><span class="lbl">Калькулятор 1ПМ</span><span class="sub">Эпли • Бжицки</span></button>
+      <button class="tool-btn" onclick="openView('viewTech')"><span class="ico">📖</span><span class="lbl">База техники</span><span class="sub">Видео-разборы</span></button>
     </div>
   </div>
 </div>
@@ -189,35 +193,36 @@
   <div class="topbar">
     <button class="circle-btn" onclick="goBackFromClientSub()">‹</button>
     <div class="title" id="progTitle">Программа</div>
-    <div class="pill-group">
-      <button class="pill-btn" onclick="toggleSupersetMode()" title="Связать суперсет">🔗</button>
-    </div>
+    <div class="pill-group"><button class="pill-btn" onclick="toggleSupersetMode()" title="Связать суперсет">🔗</button></div>
   </div>
   <div class="container">
     <div class="section-label" style="margin-top:0">Неделя</div>
     <div id="weekChips" class="chips-scroll"></div>
-
     <div class="section-label">Тренировочный день</div>
     <div id="dayCards" class="day-cards"></div>
-
     <div id="supersetHint" class="muted hidden" style="margin:6px 0 10px;color:var(--blue)">🔗 Нажмите на 2 упражнения, чтобы объединить их в суперсет</div>
     <div class="section-label">Упражнения</div>
     <div id="exercisesList"></div>
   </div>
 </div>
 
-<!-- ЭКРАН 3: ЗАПИСЬ ПОДХОДОВ + САМОЧУВСТВИЕ -->
+<!-- ЭКРАН 3: ЗАПИСЬ ПОДХОДОВ -->
 <div id="viewWorkout" class="hidden">
   <div class="topbar">
     <button class="circle-btn" onclick="closeWorkout()">‹</button>
     <div class="title" id="exTitle">Упражнение</div>
     <div class="pill-group">
+      <button class="pill-btn" onclick="openPlatesModal()" title="Калькулятор блинов">🏋️</button>
       <button class="pill-btn" onclick="sendCurrentExTechnique()" title="Техника">📖</button>
-      <button class="pill-btn" onclick="addSetRow()" title="Добавить сет">+</button>
     </div>
   </div>
 
   <div class="container">
+    <div id="prBanner" class="pr-banner hidden">
+      <div id="prText" style="font-size:13px;font-weight:600;color:#FFE57F"></div>
+      <button class="pr-btn" onclick="applyNewPR()">Обновить 1ПМ</button>
+    </div>
+
     <div class="warmup-box">
       <div style="font-weight:700;margin-bottom:4px" id="exTarget">Цель: 3-4 × 10-12</div>
       <div class="muted" id="exPlan">План вес: —</div>
@@ -225,25 +230,29 @@
     </div>
 
     <div class="card">
-      <div class="set-header">
-        <div>Сет</div><div>Вес (кг)</div><div>Повторения</div><div></div>
-      </div>
+      <div class="set-header"><div>Сет</div><div>Вес (кг)</div><div>Повторения</div><div></div></div>
       <div id="setsContainer"></div>
-
-      <div class="action-bar">
+      <div class="action-bar-3">
         <button onclick="addSetRow()">⊕ Сет</button>
-        <button onclick="cycleTimerPreset()" id="timerPresetBtn">⏱ 1 мин 30 сек</button>
+        <button onclick="repeatPrevSet()">↺ Повтор</button>
+        <button onclick="cycleTimerPreset()" id="timerPresetBtn">⏱ 1:30</button>
       </div>
     </div>
 
     <div class="card">
-      <div class="card-title" style="margin-bottom:4px">Самочувствие после упражнения</div>
+      <div class="card-title" style="margin-bottom:4px">Самочувствие</div>
       <div class="mood-bar" id="moodBar">
         <button class="mood-btn" onclick="saveMood('Отлично', this)"><span>🔥</span>Отлично</button>
         <button class="mood-btn" onclick="saveMood('Нормально', this)"><span>🙂</span>Норм</button>
         <button class="mood-btn" onclick="saveMood('Устал', this)"><span>😴</span>Устал</button>
         <button class="mood-btn" onclick="saveMood('Тяжело', this)"><span>🤕</span>Тяжело</button>
       </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:6px">Комментарий к упражнению</div>
+      <textarea id="exCommentInput" class="std-input" rows="2" placeholder="Например: тянет плечо, заменил тренажёр..." style="margin-bottom:8px"></textarea>
+      <button class="primary-btn" onclick="saveComment()">Сохранить комментарий</button>
     </div>
   </div>
 
@@ -271,8 +280,8 @@
       <button class="key" onclick="padPress('7')">7</button>
       <button class="key" onclick="padPress('8')">8</button>
       <button class="key" onclick="padPress('9')">9</button>
-      <button class="key ok" onclick="hideKeypad()">✓</button>
-      <button class="key" onclick="hideKeypad()">⌄</button>
+      <button class="key ok" onclick="hideKeypad(true)">✓</button>
+      <button class="key" onclick="hideKeypad(false)">⌄</button>
       <button class="key" onclick="padPress('0')">0</button>
       <button class="key" onclick="padBack()">⌫</button>
       <button class="key" onclick="nextField()">→</button>
@@ -280,7 +289,7 @@
   </div>
 </div>
 
-<!-- ЭКРАН 4: СПИСОК КЛИЕНТОВ -->
+<!-- ЭКРАН 4: КЛИЕНТЫ -->
 <div id="viewClients" class="hidden">
   <div class="topbar"><div class="title" style="padding:0">👥 Клиенты</div></div>
   <div class="container" id="clientsList"></div>
@@ -297,40 +306,23 @@
     <div class="card">
       <div style="display:flex;align-items:center;gap:14px">
         <div class="avatar-circle" style="width:52px;height:52px;font-size:24px">👤</div>
-        <div>
-          <div style="font-size:17px;font-weight:700" id="clientCardName">Имя</div>
-          <div class="muted" id="clientCardMeta">ID: —</div>
-        </div>
+        <div><div style="font-size:17px;font-weight:700" id="clientCardName">Имя</div><div class="muted" id="clientCardMeta">ID: —</div></div>
       </div>
       <div id="clientProgressSlot"></div>
     </div>
-
     <div id="clientProgSection" class="hidden">
       <div class="section-label">Программа клиента</div>
       <div id="clientProgChips" class="chips-scroll" style="margin-bottom:10px"></div>
     </div>
-
     <div class="section-label">Разделы</div>
-    <div class="list-item" onclick="openActiveClientSection('plan')">
-      <div class="ex-left"><div class="avatar-circle">📋</div><div><b>План тренировок</b><div class="muted">Недели, дни и подходы</div></div></div>
-      <span class="chevron">›</span>
-    </div>
-    <div class="list-item" onclick="openActiveClientSection('records')">
-      <div class="ex-left"><div class="avatar-circle">🏆</div><div><b>Рекорды (1ПМ)</b><div class="muted">Просмотр и редактирование 1RM</div></div></div>
-      <span class="chevron">›</span>
-    </div>
-    <div class="list-item" onclick="openActiveClientSection('stats')">
-      <div class="ex-left"><div class="avatar-circle">📈</div><div><b>Статистика прогресса</b><div class="muted">Графики e1RM и тоннажа</div></div></div>
-      <span class="chevron">›</span>
-    </div>
-    <div class="list-item" onclick="openActiveClientSection('measurements')">
-      <div class="ex-left"><div class="avatar-circle">📏</div><div><b>Журнал замеров</b><div class="muted">Вес, талия, % жира и график</div></div></div>
-      <span class="chevron">›</span>
-    </div>
+    <div class="list-item" onclick="openActiveClientSection('plan')"><div class="ex-left"><div class="avatar-circle">📋</div><div><b>План тренировок</b><div class="muted">Недели, дни и подходы</div></div></div><span class="chevron">›</span></div>
+    <div class="list-item" onclick="openActiveClientSection('records')"><div class="ex-left"><div class="avatar-circle">🏆</div><div><b>Рекорды (1ПМ)</b><div class="muted">Просмотр и редактирование 1RM</div></div></div><span class="chevron">›</span></div>
+    <div class="list-item" onclick="openActiveClientSection('stats')"><div class="ex-left"><div class="avatar-circle">📈</div><div><b>Статистика прогресса</b><div class="muted">Графики e1RM и тоннажа</div></div></div><span class="chevron">›</span></div>
+    <div class="list-item" onclick="openActiveClientSection('measurements')"><div class="ex-left"><div class="avatar-circle">📏</div><div><b>Журнал замеров</b><div class="muted">Вес, талия, % жира и график</div></div></div><span class="chevron">›</span></div>
   </div>
 </div>
 
-<!-- ЭКРАН 5: ЖУРНАЛ ЗАМЕРОВ -->
+<!-- ЭКРАН 5: ЗАМЕРЫ -->
 <div id="viewMeasurements" class="hidden">
   <div class="topbar">
     <button class="circle-btn" onclick="goBackFromClientSub()">‹</button>
@@ -353,12 +345,11 @@
         <div><label class="field-label">Плечи (см)</label><input id="mShoulders" class="std-input" type="number" step="0.5" placeholder="105"></div>
       </div>
       <div class="grid-2" style="margin-bottom:0">
-        <div><label class="field-label">Бедро Л/П (см)</label><input id="mThighL" class="std-input" type="number" step="0.5" placeholder="55"></div>
-        <div><label class="field-label">Бицепс Л/П (см)</label><input id="mBicepsL" class="std-input" type="number" step="0.5" placeholder="32"></div>
+        <div><label class="field-label">Бедро (см)</label><input id="mThighL" class="std-input" type="number" step="0.5" placeholder="55"></div>
+        <div><label class="field-label">Бицепс (см)</label><input id="mBicepsL" class="std-input" type="number" step="0.5" placeholder="32"></div>
       </div>
       <button class="primary-btn" onclick="submitMeasurement()">Сохранить замер</button>
     </div>
-
     <div class="seg-ctrl-3">
       <button class="seg-btn active" id="mModeWeight" onclick="setMeasMode('weight')">Вес (кг)</button>
       <button class="seg-btn" id="mModeWaist" onclick="setMeasMode('waist')">Талия (см)</button>
@@ -372,18 +363,11 @@
 
 <!-- ЭКРАН 6: КБЖУ -->
 <div id="viewKbju" class="hidden">
-  <div class="topbar">
-    <button class="circle-btn" onclick="openView('viewHome')">‹</button>
-    <div class="title">🥗 Калькулятор КБЖУ</div>
-    <div></div>
-  </div>
+  <div class="topbar"><button class="circle-btn" onclick="openView('viewHome')">‹</button><div class="title">🥗 Калькулятор КБЖУ</div><div></div></div>
   <div class="container">
     <div class="card">
       <label class="field-label">Пол</label>
-      <div class="seg-ctrl">
-        <button class="seg-btn active" id="gBtnM" onclick="selectGender('М')">Мужской</button>
-        <button class="seg-btn" id="gBtnF" onclick="selectGender('Ж')">Женский</button>
-      </div>
+      <div class="seg-ctrl"><button class="seg-btn active" id="gBtnM" onclick="selectGender('М')">Мужской</button><button class="seg-btn" id="gBtnF" onclick="selectGender('Ж')">Женский</button></div>
       <div class="grid-2" style="margin-bottom:0">
         <div><label class="field-label">Вес (ОМТ, кг)</label><input id="kWeight" class="std-input" type="number" step="0.1" placeholder="70" oninput="updateSmtPreview()"></div>
         <div><label class="field-label">Рост (см)</label><input id="kHeight" class="std-input" type="number" placeholder="175"></div>
@@ -411,11 +395,7 @@
 
 <!-- ЭКРАН 7: 1ПМ -->
 <div id="view1RM" class="hidden">
-  <div class="topbar">
-    <button class="circle-btn" onclick="openView('viewHome')">‹</button>
-    <div class="title">🏋️ Калькулятор 1ПМ</div>
-    <div></div>
-  </div>
+  <div class="topbar"><button class="circle-btn" onclick="openView('viewHome')">‹</button><div class="title">🏋️ Калькулятор 1ПМ</div><div></div></div>
   <div class="container">
     <div class="card">
       <label class="field-label">Рабочий вес (кг)</label><input id="rmW" class="std-input" type="number" step="0.5" placeholder="80">
@@ -428,31 +408,19 @@
 
 <!-- ЭКРАН 8: РЕКОРДЫ -->
 <div id="viewRecords" class="hidden">
-  <div class="topbar">
-    <button class="circle-btn" onclick="goBackFromClientSub()">‹</button>
-    <div class="title" id="recordsTitle">🏆 Мои рекорды (1ПМ)</div>
-    <div></div>
-  </div>
+  <div class="topbar"><button class="circle-btn" onclick="goBackFromClientSub()">‹</button><div class="title" id="recordsTitle">🏆 Мои рекорды (1ПМ)</div><div></div></div>
   <div class="container" id="recordsList"></div>
 </div>
 
 <!-- ЭКРАН 9: ТЕХНИКА -->
 <div id="viewTech" class="hidden">
-  <div class="topbar">
-    <button class="circle-btn" onclick="openView('viewHome')">‹</button>
-    <div class="title">📖 База техники</div>
-    <div></div>
-  </div>
+  <div class="topbar"><button class="circle-btn" onclick="openView('viewHome')">‹</button><div class="title">📖 База техники</div><div></div></div>
   <div class="container" id="techList"></div>
 </div>
 
 <!-- ЭКРАН 10: СТАТИСТИКА -->
 <div id="viewStats" class="hidden">
-  <div class="topbar">
-    <button class="circle-btn" onclick="goBackFromClientSub()">‹</button>
-    <div class="title" id="statsTitle">📈 Статистика</div>
-    <div></div>
-  </div>
+  <div class="topbar"><button class="circle-btn" onclick="goBackFromClientSub()">‹</button><div class="title" id="statsTitle">📈 Статистика</div><div></div></div>
   <div class="container">
     <div class="seg-ctrl-3">
       <button class="seg-btn active" id="stModeE1rm" onclick="setStatsMode('e1rm')">Сила (e1RM)</button>
@@ -478,10 +446,10 @@ if (tg) { tg.ready(); tg.expand(); }
 const CHAT_ID = tg?.initDataUnsafe?.user?.id || "404570922";
 
 let appData = null, currentProg = null, currentWeeks = [], currentRecords = [], currentEx = null, currentMeas = [];
-let selectedWeekIdx = 0, selectedDayIdx = 0, selectedClientIdx = 0, selectedClientProgIdx = 0;
-let backView = "viewHome", kbjuGender = "М", statsMode = "e1rm", measMode = "weight";
-let activeInput = null, activeRir = "", supersetMode = false, supersetPick = [];
-let timerPresets = [60, 90, 120, 180], timerPresetIdx = 1, timerInterval = null, timerLeft = 0;
+let selectedWeekIdx = 0, selectedDayIdx = 0, selectedClientIdx = 0, selectedClientProgIdx = 0, visibleSetsCount = 3;
+let backView = "viewHome", kbjuGender = "М", statsMode = "e1rm", measMode = "weight", barWeight = 20;
+let activeInput = null, activeRir = "", supersetMode = false, supersetPick = [], pendingPR = null;
+let timerPresets = [60, 90, 120, 180], timerPresetIdx = 1, timerInterval = null, timerEndTime = 0;
 
 function showToast(msg) {
   const t = document.getElementById("toast");
@@ -495,7 +463,7 @@ async function apiCall(params) {
   return await r.json();
 }
 
-function getMinTargetSets(s) { const n = String(s || "").match(/\d+/g); return (!n || !n.length) ? 3 : Math.min(Math.min(...n.map(Number)), 4); }
+function getMinTargetSets(s) { const n = String(s || "").match(/\d+/g); return (!n || !n.length) ? 3 : Math.min(Math.min(...n.map(Number)), 5); }
 function isExDone(ex) { return (ex.sets || []).filter(s => String(s.w || "").trim() !== "" && String(s.r || "").trim() !== "").length >= getMinTargetSets(ex.targetSets); }
 function isDayDone(d) { return (d.exercises || []).length > 0 && d.exercises.every(isExDone); }
 function isWeekDone(w) { return (w.days || []).length > 0 && w.days.every(isDayDone); }
@@ -580,9 +548,7 @@ async function openClientCard(ci) {
   document.getElementById("clientCardName").innerText = client.name;
   document.getElementById("clientCardMeta").innerText = client.telegramId ? `Telegram ID: ${client.telegramId}` : "Telegram ID не указан";
   document.getElementById("clientProgressSlot").innerHTML = "<div class='muted' style='margin-top:10px'>Загрузка прогресса...</div>";
-  renderClientProgChips();
-  openView("viewClientCard");
-  loadClientCardProgress();
+  renderClientProgChips(); openView("viewClientCard"); loadClientCardProgress();
 }
 async function loadClientCardProgress() {
   const prog = appData.clients[selectedClientIdx]?.programs[selectedClientProgIdx];
@@ -616,8 +582,7 @@ async function openActiveClientSection(section) {
 async function openMyMeasurements() {
   backView = "viewHome";
   if (!currentProg && appData?.programs?.length) currentProg = appData.programs[0];
-  const ssId = currentProg?.spreadsheetId || appData?.user?.spreadsheetId || "";
-  await loadMeasurements("📏 Мои замеры", ssId);
+  await loadMeasurements("📏 Мои замеры", currentProg?.spreadsheetId || appData?.user?.spreadsheetId || "");
 }
 async function loadMeasurements(title, ssId) {
   document.getElementById("measTitle").innerText = title;
@@ -626,8 +591,7 @@ async function loadMeasurements(title, ssId) {
   document.getElementById("measHistory").innerHTML = "";
   openView("viewMeasurements");
   const res = await apiCall({ action: "getMeasurements", spreadsheetId: ssId });
-  currentMeas = res.items || [];
-  renderMeasurements();
+  currentMeas = res.items || []; renderMeasurements();
 }
 function toggleMeasForm() { document.getElementById("measFormCard").classList.toggle("hidden"); }
 function setMeasMode(mode) {
@@ -639,79 +603,49 @@ function setMeasMode(mode) {
 }
 function renderMeasurements() {
   const labels = [], values = [];
-  currentMeas.forEach(m => {
-    const v = parseFloat(String(m[measMode] || "").replace(",", "."));
-    if (!isNaN(v) && v > 0) { labels.push(String(m.date || "").slice(0, 5)); values.push(v); }
-  });
+  currentMeas.forEach(m => { const v = parseFloat(String(m[measMode] || "").replace(",", ".")); if (!isNaN(v) && v > 0) { labels.push(String(m.date || "").slice(0, 5)); values.push(v); } });
   const unit = measMode === "weight" ? "кг" : (measMode === "waist" ? "см" : "%");
-  if (values.length) {
-    const diff = (values[values.length - 1] - values[0]).toFixed(1);
-    document.getElementById("measChartBox").innerHTML = `<div class="card">
-      <div class="card-title"><span>Динамика (${unit})</span><span class="badge active">${diff >= 0 ? "+" + diff : diff} ${unit}</span></div>
-      ${buildSvgChart(labels, values, true)}
-    </div>`;
-  } else {
-    document.getElementById("measChartBox").innerHTML = `<div class="card"><div class="muted">Нет данных для графика. Нажмите <b>+</b> сверху, чтобы добавить первый замер.</div></div>`;
-  }
+  document.getElementById("measChartBox").innerHTML = values.length
+    ? `<div class="card"><div class="card-title"><span>Динамика (${unit})</span><span class="badge active">${(values[values.length-1]-values[0])>=0?"+":""}${(values[values.length-1]-values[0]).toFixed(1)} ${unit}</span></div>${buildSvgChart(labels, values, true)}</div>`
+    : `<div class="card"><div class="muted">Нет данных для графика. Нажмите <b>+</b> сверху, чтобы добавить замер.</div></div>`;
   document.getElementById("measHistory").innerHTML = currentMeas.slice().reverse().map(m => `
-    <div class="card">
-      <div class="card-title"><span>📅 ${m.date || "Без даты"}</span>${m.weight ? `<span class="badge active">${m.weight} кг</span>` : ""}</div>
-      <div class="muted">
-        ${m.fat ? `Жир: <b>${m.fat}%</b> • ` : ""}${m.waist ? `Талия: <b>${m.waist}</b> • ` : ""}${m.glutes ? `Ягодицы: <b>${m.glutes}</b> • ` : ""}
-        ${m.chest ? `Грудь: <b>${m.chest}</b> • ` : ""}${m.shoulders ? `Плечи: <b>${m.shoulders}</b> • ` : ""}
-        ${m.thighL ? `Бедро: <b>${m.thighL}</b> • ` : ""}${m.bicepsL ? `Бицепс: <b>${m.bicepsL}</b>` : ""}
-      </div>
+    <div class="card"><div class="card-title"><span>📅 ${m.date || "Без даты"}</span>${m.weight ? `<span class="badge active">${m.weight} кг</span>` : ""}</div>
+      <div class="muted">${m.fat?`Жир: <b>${m.fat}%</b> • `:""}${m.waist?`Талия: <b>${m.waist}</b> • `:""}${m.glutes?`Ягодицы: <b>${m.glutes}</b> • `:""}${m.chest?`Грудь: <b>${m.chest}</b> • `:""}${m.shoulders?`Плечи: <b>${m.shoulders}</b> • `:""}${m.thighL?`Бедро: <b>${m.thighL}</b> • `:""}${m.bicepsL?`Бицепс: <b>${m.bicepsL}</b>`:""}</div>
     </div>`).join("") || "<div class='card'><div class='muted'>Замеров пока нет</div></div>";
 }
 async function submitMeasurement() {
-  const ssId = currentProg?.spreadsheetId || appData?.user?.spreadsheetId || "";
   showToast("Сохраняю замер...");
   const res = await apiCall({
-    action: "saveMeasurement", spreadsheetId: ssId,
-    weight: document.getElementById("mWeight").value,
-    fat: document.getElementById("mFat").value,
-    waist: document.getElementById("mWaist").value,
-    glutes: document.getElementById("mGlutes").value,
-    chest: document.getElementById("mChest").value,
-    shoulders: document.getElementById("mShoulders").value,
-    thighL: document.getElementById("mThighL").value,
-    thighR: document.getElementById("mThighL").value,
-    bicepsL: document.getElementById("mBicepsL").value,
-    bicepsR: document.getElementById("mBicepsL").value
+    action: "saveMeasurement", spreadsheetId: currentProg?.spreadsheetId || appData?.user?.spreadsheetId || "",
+    weight: document.getElementById("mWeight").value, fat: document.getElementById("mFat").value,
+    waist: document.getElementById("mWaist").value, glutes: document.getElementById("mGlutes").value,
+    chest: document.getElementById("mChest").value, shoulders: document.getElementById("mShoulders").value,
+    thighL: document.getElementById("mThighL").value, thighR: document.getElementById("mThighL").value,
+    bicepsL: document.getElementById("mBicepsL").value, bicepsR: document.getElementById("mBicepsL").value
   });
-  currentMeas = res.items || [];
-  document.getElementById("measFormCard").classList.add("hidden");
-  renderMeasurements();
-  showToast("✅ Замер сохранён!");
+  currentMeas = res.items || []; document.getElementById("measFormCard").classList.add("hidden"); renderMeasurements(); showToast("✅ Замер сохранён!");
 }
 
-/* ПРОГРАММА, ПОДХОДЫ, ЗАПАС И САМОЧУВСТВИЕ */
+/* ПРОГРАММА, ПОДХОДЫ, ПОВТОР, КОММЕНТАРИЙ, БЛИНЫ, PR */
 async function ensureMyProgramLoaded() {
   if (!currentProg && appData?.programs?.length) currentProg = appData.programs[0];
   if (!currentProg) return false;
   const res = await apiCall({ action: "getProgram", spreadsheetId: currentProg.spreadsheetId, sheetName: currentProg.sheetName, sheet1rmName: currentProg.sheet1rmName });
-  currentWeeks = res.weeks || []; currentRecords = res.records || [];
-  return true;
+  currentWeeks = res.weeks || []; currentRecords = res.records || []; return true;
 }
 async function openProgram(idx) { currentProg = appData.programs[idx]; await loadProgramData(currentProg); }
 async function loadProgramData(prog) {
-  document.getElementById("progTitle").innerText = prog.title;
-  openView("viewProgram");
-  document.getElementById("weekChips").innerHTML = "";
-  document.getElementById("dayCards").innerHTML = "";
+  document.getElementById("progTitle").innerText = prog.title; openView("viewProgram");
+  document.getElementById("weekChips").innerHTML = ""; document.getElementById("dayCards").innerHTML = "";
   document.getElementById("exercisesList").innerHTML = "<div class='card'><div class='muted'>Загрузка тренировок...</div></div>";
   const res = await apiCall({ action: "getProgram", spreadsheetId: prog.spreadsheetId, sheetName: prog.sheetName, sheet1rmName: prog.sheet1rmName });
-  currentWeeks = res.weeks || []; currentRecords = res.records || [];
-  selectedWeekIdx = 0; selectedDayIdx = 0;
-  renderWeeks();
+  currentWeeks = res.weeks || []; currentRecords = res.records || []; selectedWeekIdx = 0; selectedDayIdx = 0; renderWeeks();
 }
 function renderWeeks() {
   document.getElementById("weekChips").innerHTML = currentWeeks.map((w, i) => {
     const done = isWeekDone(w), shortTitle = (w.title.match(/НЕДЕЛЯ\s*\d+/i) || [`Неделя ${i+1}`])[0];
-    const cleanLabel = shortTitle.charAt(0).toUpperCase() + shortTitle.slice(1).toLowerCase();
-    return `<button class="week-chip ${i===selectedWeekIdx?'active':''} ${done?'done':''}" onclick="selectWeek(${i})">${done ? '<span class="check-pill">✓</span>' : ''} ${cleanLabel}</button>`;
-  }).join("");
-  renderDays();
+    return `<button class="week-chip ${i===selectedWeekIdx?'active':''} ${done?'done':''}" onclick="selectWeek(${i})">${done?'<span class="check-pill">✓</span>':''} ${shortTitle.charAt(0).toUpperCase()+shortTitle.slice(1).toLowerCase()}</button>`;
+  }).join(""); renderDays();
 }
 function selectWeek(idx) { selectedWeekIdx = idx; selectedDayIdx = 0; renderWeeks(); }
 function renderDays() {
@@ -719,11 +653,10 @@ function renderDays() {
   document.getElementById("dayCards").innerHTML = days.map((d, i) => {
     const done = isDayDone(d), doneCnt = (d.exercises || []).filter(isExDone).length, totalCnt = (d.exercises || []).length, parts = d.title.split("•");
     return `<div class="day-card ${i===selectedDayIdx?'active':''} ${done?'done':''}" onclick="selectDay(${i})">
-      <div class="day-card-top"><span>${parts[0].trim()}</span>${done ? '<span class="check-pill">✓</span>' : `<span class="badge">${doneCnt}/${totalCnt}</span>`}</div>
-      <div class="day-card-sub">${parts[1] ? parts[1].trim() : `${doneCnt} из ${totalCnt} упр.`}</div>
+      <div class="day-card-top"><span>${parts[0].trim()}</span>${done?'<span class="check-pill">✓</span>':`<span class="badge">${doneCnt}/${totalCnt}</span>`}</div>
+      <div class="day-card-sub">${parts[1]?parts[1].trim():`${doneCnt} из ${totalCnt} упр.`}</div>
     </div>`;
-  }).join("");
-  renderExercises();
+  }).join(""); renderExercises();
 }
 function selectDay(idx) { selectedDayIdx = idx; renderDays(); }
 function renderExercises() {
@@ -731,34 +664,28 @@ function renderExercises() {
   document.getElementById("exercisesList").innerHTML = exs.map((ex, i) => {
     const done = isExDone(ex), doneSets = ex.sets.filter(s => String(s.w || "").trim() !== "" && String(s.r || "").trim() !== "").length;
     return `<div class="list-item ${done?'done':''} ${ex.superset?'superset':''}" onclick="handleExClick(${selectedWeekIdx},${selectedDayIdx},${i})">
-      <div class="ex-left">
-        <div class="status-dot ${done?'done':''}">✓</div>
-        <div style="min-width:0">
-          <div style="font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${ex.name}</div>
-          <div class="muted">${ex.targetSets} подх. × ${ex.targetReps} ${ex.planWeight ? '• План: '+ex.planWeight+' кг' : ''}</div>
-        </div>
-      </div>
-      <span class="badge ${done?'active':''}">${done ? 'Готово' : `${doneSets}/${getMinTargetSets(ex.targetSets)}`}</span>
+      <div class="ex-left"><div class="status-dot ${done?'done':''}">✓</div><div style="min-width:0">
+        <div style="font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${ex.name}</div>
+        <div class="muted">${ex.targetSets} подх. × ${ex.targetReps} ${ex.planWeight?'• План: '+ex.planWeight+' кг':''}</div>
+      </div></div>
+      <span class="badge ${done?'active':''}">${done?'Готово':`${doneSets}/${getMinTargetSets(ex.targetSets)}`}</span>
     </div>`;
   }).join("") || "<div class='card'><div class='muted'>Упражнения не найдены</div></div>";
 }
 
-function findPrevWorkoutText(wIdx, exName) {
+function findPrevWorkoutObj(wIdx, exName) {
   const target = exName.trim().toLowerCase();
   for (let w = wIdx - 1; w >= 0; w--) {
     for (const d of (currentWeeks[w]?.days || [])) {
       for (const ex of (d.exercises || [])) {
         if (ex.name.trim().toLowerCase() === target) {
           const valid = (ex.sets || []).filter(s => String(s.w || "").trim() !== "" && String(s.r || "").trim() !== "");
-          if (valid.length) {
-            const rirPart = ex.rir ? ` • Запас: <b>${ex.rir}</b>` : "";
-            return `🕒 Прошлая (Нед ${w + 1}): <b>${valid.length} подх.</b> • ${valid.map(s => `${s.w}×${s.r}`).join(", ")}${rirPart}`;
-          }
+          if (valid.length) return { weekNum: w + 1, sets: valid, rir: ex.rir || "" };
         }
       }
     }
   }
-  return "";
+  return null;
 }
 
 function toggleSupersetMode() { supersetMode = !supersetMode; supersetPick = []; document.getElementById("supersetHint").classList.toggle("hidden", !supersetMode); }
@@ -770,17 +697,162 @@ function handleExClick(wIdx, dIdx, eIdx) {
     if (supersetPick.length >= 2) { supersetMode = false; document.getElementById("supersetHint").classList.add("hidden"); }
     renderExercises(); return;
   }
-  currentEx = ex; activeRir = ex.rir || "";
+  currentEx = ex; activeRir = ex.rir || ""; pendingPR = null;
+  document.getElementById("prBanner").classList.add("hidden");
   document.getElementById("exTitle").innerText = ex.name;
   document.getElementById("exTarget").innerText = `Цель: ${ex.targetSets} подх. × ${ex.targetReps} повт.`;
   document.getElementById("exPlan").innerText = ex.planWeight ? `План вес: ${ex.planWeight} кг • Коэфф: ${ex.coeff}` : `Коэфф: ${ex.coeff}`;
+  document.getElementById("exCommentInput").value = ex.comment || "";
 
-  const prevHtml = findPrevWorkoutText(wIdx, ex.name), hintEl = document.getElementById("prevWorkoutHint");
-  if (prevHtml) { hintEl.innerHTML = prevHtml; hintEl.classList.remove("hidden"); } else hintEl.classList.add("hidden");
+  const prev = findPrevWorkoutObj(wIdx, ex.name), hintEl = document.getElementById("prevWorkoutHint");
+  if (prev) {
+    const rirPart = prev.rir ? ` • Запас: <b>${prev.rir}</b>` : "";
+    hintEl.innerHTML = `🕒 Прошлая (Нед ${prev.weekNum}): <b>${prev.sets.length} подх.</b> • ${prev.sets.map(s => `${s.w}×${s.r}`).join(", ")}${rirPart}`;
+    hintEl.classList.remove("hidden");
+  } else hintEl.classList.add("hidden");
+
+  let lastFilled = 0;
+  ex.sets.forEach((s, idx) => { if (String(s.w || "").trim() !== "" || String(s.r || "").trim() !== "") lastFilled = idx + 1; });
+  visibleSetsCount = Math.max(lastFilled, Math.min(getMinTargetSets(ex.targetSets), ex.maxSets || 4), 1);
 
   document.querySelectorAll(".mood-btn").forEach(b => b.classList.toggle("selected", b.innerText.includes(ex.mood || "__")));
+  renderSets(); openView("viewWorkout");
+}
+
+function renderSets() {
+  const list = currentEx.sets.slice(0, visibleSetsCount);
+  document.getElementById("setsContainer").innerHTML = list.map((s, i) => `
+    <div class="set-row">
+      <div class="set-num ${s.drop?'drop':''}" onclick="toggleDrop(${i})">${s.drop ? 'D' : (i+1)}</div>
+      <div class="set-input" id="in_w_${i}" onclick="focusField(${i},'w')">${s.w ? s.w + ' кг' : '—'}</div>
+      <div class="set-input" id="in_r_${i}" onclick="focusField(${i},'r')">${s.r || '—'}</div>
+      <button class="check-btn ${s.saving ? 'saving' : (s.done || (s.w && s.r) ? 'done' : '')}" onclick="saveSetRow(${i})">${s.saving ? '⏳' : '✓'}</button>
+    </div>`).join("");
+}
+
+function addSetRow() {
+  const limit = currentEx.maxSets || 4;
+  if (visibleSetsCount < limit) {
+    visibleSetsCount++;
+    while (currentEx.sets.length < visibleSetsCount) currentEx.sets.push({ w: "", r: "" });
+    renderSets();
+  } else {
+    showToast(`Максимум ${limit} подходов в этой таблице`);
+  }
+}
+
+function repeatPrevSet() {
+  let targetIdx = activeInput ? activeInput.i : -1;
+  if (targetIdx === -1) {
+    for (let i = 0; i < visibleSetsCount; i++) {
+      if (!currentEx.sets[i].w || !currentEx.sets[i].r) { targetIdx = i; break; }
+    }
+  }
+  if (targetIdx === -1) {
+    if (visibleSetsCount < (currentEx.maxSets || 4)) { addSetRow(); targetIdx = visibleSetsCount - 1; }
+    else { showToast("Все подходы заполнены"); return; }
+  }
+  let src = null;
+  for (let j = targetIdx - 1; j >= 0; j--) {
+    if (currentEx.sets[j].w && currentEx.sets[j].r) { src = currentEx.sets[j]; break; }
+  }
+  if (!src) {
+    const prev = findPrevWorkoutObj(selectedWeekIdx, currentEx.name);
+    if (prev && prev.sets.length) src = prev.sets[0];
+  }
+  if (!src) { showToast("Нет прошлого подхода для повтора"); return; }
+  currentEx.sets[targetIdx].w = src.w;
+  currentEx.sets[targetIdx].r = src.r;
+  currentEx.sets[targetIdx].done = false;
   renderSets();
-  openView("viewWorkout");
+  saveSetRow(targetIdx);
+}
+
+function toggleDrop(i) { currentEx.sets[i].drop = !currentEx.sets[i].drop; renderSets(); }
+function focusField(i, field) {
+  activeInput = { i, field };
+  document.querySelectorAll(".set-input").forEach(el => el.classList.remove("active"));
+  document.getElementById(`in_${field}_${i}`).classList.add("active");
+  document.getElementById("keypadSheet").classList.remove("hidden");
+}
+function hideKeypad(shouldSave) {
+  if (shouldSave && activeInput) {
+    const idx = activeInput.i, s = currentEx.sets[idx];
+    if (s && s.w && s.r && !s.done) saveSetRow(idx);
+  }
+  document.getElementById("keypadSheet").classList.add("hidden");
+  document.querySelectorAll(".set-input").forEach(el => el.classList.remove("active"));
+  activeInput = null;
+}
+function padPress(ch) {
+  if (!activeInput) return;
+  const s = currentEx.sets[activeInput.i];
+  s[activeInput.field] = String(s[activeInput.field] || "") + ch;
+  s.done = false; renderSets();
+  document.getElementById(`in_${activeInput.field}_${activeInput.i}`).classList.add("active");
+}
+function padBack() {
+  if (!activeInput) return;
+  const s = currentEx.sets[activeInput.i];
+  s[activeInput.field] = String(s[activeInput.field] || "").slice(0, -1);
+  s.done = false; renderSets();
+  document.getElementById(`in_${activeInput.field}_${activeInput.i}`).classList.add("active");
+}
+function nextField() {
+  if (!activeInput) return;
+  if (activeInput.field === "w") focusField(activeInput.i, "r");
+  else {
+    const idx = activeInput.i;
+    if (currentEx.sets[idx].w && currentEx.sets[idx].r) saveSetRow(idx);
+    if (idx + 1 < visibleSetsCount) focusField(idx + 1, "w");
+    else hideKeypad(false);
+  }
+}
+function setRir(val, btn) { activeRir = val; currentEx.rir = val; document.querySelectorAll(".rir-dot").forEach(b => b.classList.remove("selected")); btn.classList.add("selected"); }
+
+async function saveSetRow(i) {
+  const s = currentEx.sets[i];
+  if (!s.w || !s.r) { showToast("⚠️ Введите вес и повторения"); return; }
+  s.saving = true; renderSets();
+  try {
+    const res = await apiCall({
+      action: "saveSet", spreadsheetId: currentProg.spreadsheetId, sheetName: currentProg.sheetName,
+      row: currentEx.row, setIdx: i + 1, weight: s.w, reps: s.r, rir: activeRir
+    });
+    if (res && res.ok) {
+      s.saving = false; s.done = true; renderSets();
+      startTimer(timerPresets[timerPresetIdx]);
+      if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred("medium");
+      showToast(`✅ Подход ${i + 1} записан`);
+      checkNewPR(s.w, s.r);
+    } else throw new Error(res?.error || "Ошибка");
+  } catch (err) {
+    s.saving = false; s.done = false; renderSets();
+    showToast("⚠️ Не сохранилось! Нажмите ✓ ещё раз");
+  }
+}
+
+function checkNewPR(wStr, rStr) {
+  const w = parseFloat(String(wStr).replace(",", ".")), r = parseInt(String(rStr), 10);
+  if (isNaN(w) || isNaN(r) || w <= 0 || r <= 0) return;
+  const e1rm = r === 1 ? w : Math.round(((w * r) / 30 + w) / 2.5) * 2.5;
+  const rec = currentRecords.find(x => x.name.trim().toLowerCase() === currentEx.name.trim().toLowerCase());
+  if (!rec) return;
+  const curMax = parseFloat(String(rec.weight || "0").replace(",", ".")) || 0;
+  if (e1rm > curMax) {
+    pendingPR = { row: rec.row, newWeight: e1rm, recRef: rec };
+    document.getElementById("prText").innerText = `🎉 Новый рекорд! e1RM: ${e1rm} кг (было ${curMax} кг)`;
+    document.getElementById("prBanner").classList.remove("hidden");
+  }
+}
+
+async function applyNewPR() {
+  if (!pendingPR) return;
+  await save1RM(pendingPR.row, pendingPR.newWeight);
+  pendingPR.recRef.weight = String(pendingPR.newWeight);
+  document.getElementById("prBanner").classList.add("hidden");
+  showToast(`🏆 Рекорд обновлён: ${pendingPR.newWeight} кг`);
+  pendingPR = null;
 }
 
 async function saveMood(mood, btn) {
@@ -788,59 +860,86 @@ async function saveMood(mood, btn) {
   currentEx.mood = mood;
   document.querySelectorAll(".mood-btn").forEach(b => b.classList.remove("selected"));
   btn.classList.add("selected");
-  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred("light");
   await apiCall({ action: "saveMood", spreadsheetId: currentProg.spreadsheetId, sheetName: currentProg.sheetName, row: currentEx.row, mood });
   showToast(`Самочувствие: ${mood}`);
 }
 
-function renderSets() {
-  document.getElementById("setsContainer").innerHTML = currentEx.sets.map((s, i) => `
-    <div class="set-row">
-      <div class="set-num ${s.drop?'drop':''}" onclick="toggleDrop(${i})">${s.drop ? 'D' : (i+1)}</div>
-      <div class="set-input" id="in_w_${i}" onclick="focusField(${i},'w')">${s.w ? s.w + ' кг' : '—'}</div>
-      <div class="set-input" id="in_r_${i}" onclick="focusField(${i},'r')">${s.r || '—'}</div>
-      <button class="check-btn ${s.done || (s.w && s.r) ? 'done' : ''}" onclick="saveSetRow(${i})">✓</button>
-    </div>`).join("");
+async function saveComment() {
+  if (!currentEx) return;
+  const val = document.getElementById("exCommentInput").value.trim();
+  currentEx.comment = val;
+  await apiCall({ action: "saveComment", spreadsheetId: currentProg.spreadsheetId, sheetName: currentProg.sheetName, row: currentEx.row, comment: val });
+  showToast("✅ Комментарий сохранён");
 }
-function toggleDrop(i) { currentEx.sets[i].drop = !currentEx.sets[i].drop; renderSets(); }
-function addSetRow() { if (currentEx.sets.length < 4) { currentEx.sets.push({ w: "", r: "" }); renderSets(); } }
-function focusField(i, field) {
-  activeInput = { i, field };
-  document.querySelectorAll(".set-input").forEach(el => el.classList.remove("active"));
-  document.getElementById(`in_${field}_${i}`).classList.add("active");
-  document.getElementById("keypadSheet").classList.remove("hidden");
-}
-function hideKeypad() { document.getElementById("keypadSheet").classList.add("hidden"); document.querySelectorAll(".set-input").forEach(el => el.classList.remove("active")); }
-function padPress(ch) { if (!activeInput) return; const s = currentEx.sets[activeInput.i]; s[activeInput.field] = String(s[activeInput.field] || "") + ch; renderSets(); document.getElementById(`in_${activeInput.field}_${activeInput.i}`).classList.add("active"); }
-function padBack() { if (!activeInput) return; const s = currentEx.sets[activeInput.i]; s[activeInput.field] = String(s[activeInput.field] || "").slice(0, -1); renderSets(); document.getElementById(`in_${activeInput.field}_${activeInput.i}`).classList.add("active"); }
-function nextField() { if (!activeInput) return; if (activeInput.field === "w") focusField(activeInput.i, "r"); else if (activeInput.i + 1 < currentEx.sets.length) focusField(activeInput.i + 1, "w"); else hideKeypad(); }
-function setRir(val, btn) { activeRir = val; currentEx.rir = val; document.querySelectorAll(".rir-dot").forEach(b => b.classList.remove("selected")); btn.classList.add("selected"); }
 
-async function saveSetRow(i) {
-  const s = currentEx.sets[i];
-  if (!s.w || !s.r) return;
-  s.done = true; renderSets(); hideKeypad();
-  startTimer(timerPresets[timerPresetIdx]);
-  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred("medium");
-  await apiCall({ action: "saveSet", spreadsheetId: currentProg.spreadsheetId, sheetName: currentProg.sheetName, row: currentEx.row, setIdx: i + 1, weight: s.w, reps: s.r, rir: activeRir });
-}
-function closeWorkout() { hideKeypad(); openView("viewProgram"); renderWeeks(); }
+function closeWorkout() { hideKeypad(false); openView("viewProgram"); renderWeeks(); }
 
+/* КАЛЬКУЛЯТОР БЛИНОВ */
+function openPlatesModal() {
+  let w = parseFloat(String(currentEx?.planWeight || "").replace(",", ".")) || 60;
+  if (activeInput && currentEx.sets[activeInput.i]?.w) w = parseFloat(String(currentEx.sets[activeInput.i].w).replace(",", ".")) || w;
+  else {
+    for (let i = visibleSetsCount - 1; i >= 0; i--) {
+      if (currentEx.sets[i]?.w) { w = parseFloat(String(currentEx.sets[i].w).replace(",", ".")) || w; break; }
+    }
+  }
+  document.getElementById("plateWeightInput").value = w;
+  renderPlatesCalc();
+  document.getElementById("platesModal").classList.remove("hidden");
+}
+function closePlatesModal(e) { if (e.target.id === "platesModal") document.getElementById("platesModal").classList.add("hidden"); }
+function setBarWeight(bw) {
+  barWeight = bw;
+  [20, 15, 10].forEach(x => document.getElementById("bar" + x).classList.toggle("active", x === bw));
+  renderPlatesCalc();
+}
+function renderPlatesCalc() {
+  const total = parseFloat(document.getElementById("plateWeightInput").value) || 0;
+  const vis = document.getElementById("platesVisual"), note = document.getElementById("platesNote");
+  if (total <= barWeight) { vis.innerHTML = "<span class='muted'>Только пустой гриф</span>"; note.innerText = ""; return; }
+  let perSide = (total - barWeight) / 2;
+  const plates = [
+    { w: 25, c: "#FF453A" }, { w: 20, c: "#5E8BFF" }, { w: 15, c: "#FFD60A" },
+    { w: 10, c: "#34C759" }, { w: 5, c: "#FFFFFF" }, { w: 2.5, c: "#A3B1C6" }, { w: 1.25, c: "#8E8E93" }
+  ];
+  const res = [];
+  plates.forEach(p => { while (perSide >= p.w - 0.001) { res.push(p); perSide -= p.w; } });
+  vis.innerHTML = res.map(p => `<div class="plate-pill" style="background:${p.c}">${p.w}</div>`).join("") || "<span class='muted'>—</span>";
+  note.innerText = perSide > 0.1 ? `Остаток: ${(perSide * 2).toFixed(1)} кг` : `На сторону: ${((total - barWeight) / 2).toFixed(2).replace(/\.00$/, "")} кг`;
+}
+
+/* ТАЙМЕР (С ФОНОВЫМ PUSH-УВЕДОМЛЕНИЕМ В БОТ) */
 function cycleTimerPreset() {
   timerPresetIdx = (timerPresetIdx + 1) % timerPresets.length;
   const sec = timerPresets[timerPresetIdx];
-  document.getElementById("timerPresetBtn").innerText = `⏱ ${Math.floor(sec/60)} мин ${sec%60 ? (sec%60)+' сек' : ''}`;
+  document.getElementById("timerPresetBtn").innerText = `⏱ ${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}`;
   startTimer(sec);
 }
 function startTimer(sec) {
-  clearInterval(timerInterval); timerLeft = sec;
-  document.getElementById("timerBanner").classList.remove("hidden"); updateTimerText();
-  timerInterval = setInterval(() => { timerLeft--; if (timerLeft <= 0) { stopTimer(); if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred("success"); } else updateTimerText(); }, 1000);
+  clearInterval(timerInterval);
+  timerEndTime = Date.now() + sec * 1000;
+  document.getElementById("timerBanner").classList.remove("hidden");
+  updateTimerText();
+  apiCall({ action: "scheduleTimer", sec, exName: currentEx ? currentEx.name : "подход" });
+  timerInterval = setInterval(() => {
+    const left = Math.max(0, Math.ceil((timerEndTime - Date.now()) / 1000));
+    if (left <= 0) {
+      stopTimer(false);
+      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred("success");
+    } else updateTimerText();
+  }, 500);
 }
-function updateTimerText() { document.getElementById("timerBanner").innerText = `⏱ ${String(Math.floor(timerLeft/60)).padStart(2,'0')}:${String(timerLeft%60).padStart(2,'0')}`; }
-function stopTimer() { clearInterval(timerInterval); document.getElementById("timerBanner").classList.add("hidden"); }
+function updateTimerText() {
+  const left = Math.max(0, Math.ceil((timerEndTime - Date.now()) / 1000));
+  document.getElementById("timerBanner").innerText = `⏱ ${String(Math.floor(left/60)).padStart(2,'0')}:${String(left%60).padStart(2,'0')}`;
+}
+function stopTimer(cancelServer) {
+  clearInterval(timerInterval);
+  document.getElementById("timerBanner").classList.add("hidden");
+  if (cancelServer) apiCall({ action: "cancelTimer" });
+}
 
-/* СТАТИСТИКА, РЕКОРДЫ, ГРАФИКИ */
+/* СТАТИСТИКА, РЕКОРДЫ, КБЖУ, 1ПМ */
 function setStatsMode(mode) {
   statsMode = mode;
   document.getElementById("stModeE1rm").classList.toggle("active", mode === "e1rm");
@@ -879,17 +978,13 @@ function buildSvgChart(xLabels, values, rawLabels = false) {
   const pts = values.map((v, i) => ({
     x: values.length === 1 ? W / 2 : padL + (i / (values.length - 1)) * (W - padL - padR),
     y: padT + (1 - (v - yMin) / (yMax - yMin)) * (H - padT - padB),
-    v: Number.isInteger(v) ? v : Number(v.toFixed(1)),
-    lbl: rawLabels ? xLabels[i] : `Нед ${xLabels[i]}`
+    v: Number.isInteger(v) ? v : Number(v.toFixed(1)), lbl: rawLabels ? xLabels[i] : `Нед ${xLabels[i]}`
   }));
   const linePath = pts.map((p, i) => `${i === 0 ? "M" : "L"} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(" ");
   const areaPath = pts.length > 1 ? `${linePath} L ${pts[pts.length - 1].x.toFixed(1)} ${H - padB} L ${pts[0].x.toFixed(1)} ${H - padB} Z` : "";
   const grid = [0.25, 0.5, 0.75].map(f => `<line x1="${padL}" y1="${padT + f*(H-padT-padB)}" x2="${W-padR}" y2="${padT + f*(H-padT-padB)}" stroke="#242429" stroke-dasharray="3 3"/>`).join("");
-  const dots = pts.map(p => `
-    <circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4.5" fill="#34C759" stroke="#0B0B0D" stroke-width="2"/>
-    <text x="${p.x.toFixed(1)}" y="${(p.y - 9).toFixed(1)}" text-anchor="middle" fill="#FFFFFF" font-size="11" font-weight="700">${p.v}</text>
-    <text x="${p.x.toFixed(1)}" y="${H - 6}" text-anchor="middle" fill="#8E8E93" font-size="10">${p.lbl}</text>`).join("");
-  return `<div class="chart-wrap"><svg viewBox="0 0 ${W} ${H}">${grid}${areaPath ? `<path d="${areaPath}" fill="rgba(52,199,89,0.12)"/>` : ""}${pts.length > 1 ? `<path d="${linePath}" fill="none" stroke="#34C759" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>` : ""}${dots}</svg></div>`;
+  const dots = pts.map(p => `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4.5" fill="#34C759" stroke="#0B0B0D" stroke-width="2"/><text x="${p.x.toFixed(1)}" y="${(p.y - 9).toFixed(1)}" text-anchor="middle" fill="#FFFFFF" font-size="11" font-weight="700">${p.v}</text><text x="${p.x.toFixed(1)}" y="${H - 6}" text-anchor="middle" fill="#8E8E93" font-size="10">${p.lbl}</text>`).join("");
+  return `<div class="chart-wrap"><svg viewBox="0 0 ${W} ${H}">${grid}${areaPath?`<path d="${areaPath}" fill="rgba(52,199,89,0.12)"/>`:""}${pts.length>1?`<path d="${linePath}" fill="none" stroke="#34C759" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`:""}${dots}</svg></div>`;
 }
 
 function renderStatsList(title) {
@@ -920,16 +1015,11 @@ function renderStatsList(title) {
     ? keys.map(name => {
         const wNums = Object.keys(stats[name]).map(Number).sort((a,b) => a-b), vals = wNums.map(n => stats[name][n][statsMode]);
         const lastObj = stats[name][wNums[wNums.length - 1]], diff = Math.round(vals[vals.length - 1] - vals[0]);
-        return `<div class="card">
-          <div class="card-title"><span>${name}</span><span class="badge active">${diff >= 0 ? "+" + diff : diff} кг</span></div>
-          ${buildSvgChart(wNums, vals, false)}
-          <div class="stat-meta"><span>Лучший: <b>${lastObj.bestSet}</b></span><span>Тоннаж: <b>${lastObj.tonnage.toLocaleString("ru-RU")} кг</b></span></div>
-        </div>`;
+        return `<div class="card"><div class="card-title"><span>${name}</span><span class="badge active">${diff>=0?"+"+diff:diff} кг</span></div>${buildSvgChart(wNums, vals, false)}<div class="stat-meta"><span>Лучший: <b>${lastObj.bestSet}</b></span><span>Тоннаж: <b>${lastObj.tonnage.toLocaleString("ru-RU")} кг</b></span></div></div>`;
       }).join("")
     : "<div class='card'><div class='muted'>Пока нет записанных рабочих весов.</div></div>";
 }
 
-/* КБЖУ И 1ПМ */
 const FAT_PRESETS = {
   "М": [{ pct: 10, label: "10%", desc: "Рельеф", waist: 14, hip: 16, abs: true }, { pct: 15, label: "15%", desc: "Атлетичное", waist: 16, hip: 17, abs: true }, { pct: 20, label: "20%", desc: "Среднее", waist: 18, hip: 19, abs: false }, { pct: 25, label: "25%", desc: "Неб. живот", waist: 21, hip: 21, abs: false }, { pct: 30, label: "30%", desc: "Выше сред.", waist: 24, hip: 23, abs: false }, { pct: 35, label: "35%+", desc: "Высокий %", waist: 27, hip: 26, abs: false }],
   "Ж": [{ pct: 18, label: "18%", desc: "Рельеф", waist: 12, hip: 18, abs: true }, { pct: 22, label: "22%", desc: "Стройное", waist: 14, hip: 19, abs: true }, { pct: 25, label: "25%", desc: "Среднее", waist: 16, hip: 21, abs: false }, { pct: 30, label: "30%", desc: "Мягкое", waist: 19, hip: 23, abs: false }, { pct: 35, label: "35%", desc: "Выше сред.", waist: 22, hip: 25, abs: false }, { pct: 40, label: "40%+", desc: "Высокий %", waist: 25, hip: 27, abs: false }]
@@ -942,12 +1032,11 @@ function makeBodySvg(item, isFemale) {
 }
 function renderFatVisuals() {
   const curFat = parseFloat(document.getElementById("kFat").value);
-  document.getElementById("fatVisualGrid").innerHTML = FAT_PRESETS[kbjuGender].map(item => `
-    <div class="fat-card ${curFat === item.pct ? 'selected' : ''}" onclick="pickFat(${item.pct})">${makeBodySvg(item, kbjuGender === "Ж")}<div class="fat-pct">${item.label}</div><div class="fat-desc">${item.desc}</div></div>`).join("");
+  document.getElementById("fatVisualGrid").innerHTML = FAT_PRESETS[kbjuGender].map(item => `<div class="fat-card ${curFat===item.pct?'selected':''}" onclick="pickFat(${item.pct})">${makeBodySvg(item, kbjuGender==="Ж")}<div class="fat-pct">${item.label}</div><div class="fat-desc">${item.desc}</div></div>`).join("");
 }
-function selectGender(g) { kbjuGender = g; document.getElementById("gBtnM").classList.toggle("active", g === "М"); document.getElementById("gBtnF").classList.toggle("active", g === "Ж"); renderFatVisuals(); }
+function selectGender(g) { kbjuGender = g; document.getElementById("gBtnM").classList.toggle("active", g==="М"); document.getElementById("gBtnF").classList.toggle("active", g==="Ж"); renderFatVisuals(); }
 function pickFat(pct) { document.getElementById("kFat").value = pct; renderFatVisuals(); updateSmtPreview(); }
-function updateSmtPreview() { const w = parseFloat(document.getElementById("kWeight").value), f = parseFloat(document.getElementById("kFat").value); document.getElementById("smtPreview").innerText = (w > 0 && f >= 3 && f <= 60) ? `✓ Сухая масса тела (СМТ): ${(w * (1 - f / 100)).toFixed(1)} кг` : ""; }
+function updateSmtPreview() { const w = parseFloat(document.getElementById("kWeight").value), f = parseFloat(document.getElementById("kFat").value); document.getElementById("smtPreview").innerText = (w>0 && f>=3 && f<=60) ? `✓ Сухая масса тела (СМТ): ${(w*(1-f/100)).toFixed(1)} кг` : ""; }
 function calcKbju() {
   const w = parseFloat(document.getElementById("kWeight").value), h = parseFloat(document.getElementById("kHeight").value), a = parseFloat(document.getElementById("kAge").value), fat = parseFloat(document.getElementById("kFat").value), amr = parseFloat(document.getElementById("kAmr").value);
   if (!w || !h || !a || isNaN(fat) || fat < 3 || fat > 60) { document.getElementById("kbjuResult").innerHTML = "<div class='muted' style='color:var(--red);margin-top:10px'>⚠️ Заполните вес, рост, возраст и % жира (3–60%).</div>"; return; }
@@ -958,12 +1047,12 @@ function calcKbju() {
     const prot = smt * pMult, fats = smt * 1.0, carbs = Math.max(0, (kcal - (prot * 4 + fats * 9)) / 4), fiber = (kcal / 1000) * 10;
     return `<div class="macro-card"><div class="macro-head"><span style="color:${color}">${title}</span><span>${Math.round(kcal)} ккал</span></div><div class="macro-row"><div class="macro-box"><b>${Math.round(prot)} г</b><span>Белки</span></div><div class="macro-box"><b>${Math.round(fats)} г</b><span>Жиры</span></div><div class="macro-box"><b>${Math.round(carbs)} г</b><span>Углеводы</span></div><div class="macro-box"><b>${Math.round(fiber)} г</b><span>Клетчатка</span></div></div></div>`;
   };
-  document.getElementById("kbjuResult").innerHTML = `<div style="margin-top:14px;padding:10px 12px;border-radius:12px;background:#101013;border:1px solid var(--border);font-size:13px">СМТ: <b>${smt.toFixed(1)} кг</b> • BMR: <b>${Math.round(bmr)} ккал</b></div>${renderPlan("🔴 Дефицит (-20%)", "#FF6961", supportKcal * 0.80, 2.5)}${renderPlan("⚪ Поддержка", "#FFFFFF", supportKcal, 1.6)}${renderPlan("🟢 Профицит (+20%)", "#34C759", supportKcal * 1.20, 1.6)}<div class="macro-card" style="font-size:13px;line-height:1.6">💧 Вода: <b>${(smt / 20).toFixed(1)} л/день</b> • 🧂 Соль: <b>${(smt / 10).toFixed(1)} г/день</b><br>☕ Кофеин: норма <b>${Math.round(w * 2.5)} мг</b> (макс. ${Math.round(w * 5)} мг)</div>`;
+  document.getElementById("kbjuResult").innerHTML = `<div style="margin-top:14px;padding:10px 12px;border-radius:12px;background:#101013;border:1px solid var(--border);font-size:13px">СМТ: <b>${smt.toFixed(1)} кг</b> • BMR: <b>${Math.round(bmr)} ккал</b></div>${renderPlan("🔴 Дефицит (-20%)", "#FF6961", supportKcal*0.8, 2.5)}${renderPlan("⚪ Поддержка", "#FFFFFF", supportKcal, 1.6)}${renderPlan("🟢 Профицит (+20%)", "#34C759", supportKcal*1.2, 1.6)}<div class="macro-card" style="font-size:13px;line-height:1.6">💧 Вода: <b>${(smt/20).toFixed(1)} л/день</b> • 🧂 Соль: <b>${(smt/10).toFixed(1)} г/день</b><br>☕ Кофеин: норма <b>${Math.round(w*2.5)} мг</b> (макс. ${Math.round(w*5)} мг)</div>`;
 }
 function calc1RM() {
   const w = parseFloat(document.getElementById("rmW").value), r = parseInt(document.getElementById("rmR").value, 10);
   if (!w || !r || r <= 0 || r > 30) return;
-  const round25 = v => Math.round(v / 2.5) * 2.5, epley = round25((w * r) / 30 + w), brzycki = round25(r < 37 ? w * (36 / (37 - r)) : epley), lander = round25((100 * w) / (101.3 - 2.67123 * r)), avg = round25((epley + brzycki + lander) / 3);
+  const round25 = v => Math.round(v / 2.5) * 2.5, epley = round25((w*r)/30+w), brzycki = round25(r<37?w*(36/(37-r)):epley), lander = round25((100*w)/(101.3-2.67123*r)), avg = round25((epley+brzycki+lander)/3);
   document.getElementById("rmResult").innerHTML = `<div class="macro-card" style="font-size:13px;line-height:1.7">• Эпли: <b>${epley} кг</b><br>• Бжицки: <b>${brzycki} кг</b><br>• Лэндер: <b>${lander} кг</b><br><div style="margin-top:6px;font-size:15px;color:var(--green)">⭐️ Рекомендуемый 1ПМ: <b>${avg} кг</b></div></div>`;
 }
 
